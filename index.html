@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TETRIS — Modern Arcade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Subtle ambient background decorative elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-grid"></div>
+
+  <!-- ========== START SCREEN ========== -->
+  <div id="screen-start" class="screen active">
+    <div class="start-card">
+      <div class="logo-box">
+        <div class="badge-tag">ARCADE PRO EDITION</div>
+        <h1 class="glow-text">TETRIS</h1>
+        <p class="logo-sub">Pure Precision & Realtime Global Leaderboard</p>
+      </div>
+
+      <div class="name-form">
+        <label for="player-name">ชื่อผู้เล่น (PILOT CALLSIGN)</label>
+        <div class="input-wrapper">
+          <span class="input-icon">👤</span>
+          <input type="text" id="player-name" placeholder="กรอกชื่อของคุณ หรือกดเริ่มทันที" maxlength="18" autocomplete="off">
+        </div>
+        <button id="btn-start" class="btn-primary-action" onclick="startGame()">
+          <span>เข้าสู่สังเวียนเกม</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+
+      <div class="start-actions">
+        <button class="btn-card" id="btn-leaderboard-from-start" onclick="openLeaderboard()">
+          <span class="btn-icon">🏆</span>
+          <span>ตารางอันดับเกียรติยศ</span>
+        </button>
+        <button class="btn-card" id="btn-feedback-from-start" onclick="openFeedback()">
+          <span class="btn-icon">💬</span>
+          <span>ส่งข้อความติชม</span>
+        </button>
+      </div>
+
+      <!-- Quick keys showcase -->
+      <div class="keys-grid">
+        <div class="key-item"><kbd>←</kbd><kbd>→</kbd> <span>เลื่อน</span></div>
+        <div class="key-item"><kbd>↑</kbd> <span>หมุน</span></div>
+        <div class="key-item"><kbd>Space</kbd> <span>ทิ้งดิ่ง</span></div>
+        <div class="key-item"><kbd>C</kbd> <span>สลับเก็บตัว (Hold)</span></div>
+        <div class="key-item"><kbd>P</kbd> <span>หยุด</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== GAME SCREEN ========== -->
+  <div id="screen-game" class="screen">
+    <div class="arcade-cabinet">
+
+      <!-- Header bar inside cabinet -->
+      <div class="cabinet-top-bar">
+        <div class="top-brand">
+          <span class="brand-dot"></span>
+          <span class="brand-name">TETRIS PRO</span>
+        </div>
+        <div class="top-status">
+          <span class="status-pill" id="display-player-name">PILOT: —</span>
+        </div>
+      </div>
+
+      <div class="game-layout">
+
+        <!-- Left Column: HOLD & SCORE -->
+        <div class="game-sidebar left">
+          <!-- HOLD BOX -->
+          <div class="arcade-card hold-card">
+            <div class="card-header">
+              <span class="card-title">HOLD</span>
+              <span class="key-badge">C</span>
+            </div>
+            <div class="preview-box">
+              <canvas id="hold-canvas" width="110" height="80"></canvas>
+            </div>
+          </div>
+
+          <!-- SCORE BOX -->
+          <div class="arcade-card score-card">
+            <span class="card-title">SCORE</span>
+            <div class="stat-number mono" id="display-score">0</div>
+            <div class="stat-sub">
+              <span>HI-SCORE</span>
+              <span class="mono" id="display-high-score">0</span>
+            </div>
+          </div>
+
+          <!-- COMBO BOX -->
+          <div class="arcade-card combo-card">
+            <span class="card-title">COMBO STREAK</span>
+            <div class="combo-display">
+              <span class="combo-icon">🔥</span>
+              <span class="combo-val mono" id="display-combo">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center: GAME BOARD -->
+        <div class="game-board-wrapper">
+          <canvas id="game-canvas" width="300" height="600"></canvas>
+          <div id="floating-banner" class="floating-banner"></div>
+
+          <div id="pause-overlay" class="overlay hidden">
+            <div class="pause-box">
+              <p class="pause-title">PAUSED</p>
+              <button class="btn-primary-action overlay-btn" id="btn-resume" onclick="togglePause()">ดำเนินเกมต่อ</button>
+              <button class="btn-card overlay-btn" id="btn-quit" onclick="quitGame()">ออกจากเกม</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: NEXT & LEVEL -->
+        <div class="game-sidebar right">
+          <!-- NEXT BOX -->
+          <div class="arcade-card next-card">
+            <div class="card-header">
+              <span class="card-title">NEXT</span>
+            </div>
+            <div class="preview-box">
+              <canvas id="next-canvas" width="110" height="80"></canvas>
+            </div>
+          </div>
+
+          <!-- LEVEL & PROGRESS -->
+          <div class="arcade-card level-card">
+            <span class="card-title">LEVEL</span>
+            <div class="stat-number mono" id="display-level">1</div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" id="level-progress-bar" style="width: 0%;"></div>
+            </div>
+            <div class="stat-sub">
+              <span>LINES CLEARED</span>
+              <span class="mono" id="display-lines">0</span>
+            </div>
+          </div>
+
+          <!-- CONTROLS & ACTIONS -->
+          <div class="arcade-card action-card">
+            <button class="sidebar-btn" id="btn-pause" onclick="togglePause()">
+              <span id="pause-icon">⏸</span>
+              <span>หยุดเกม (P)</span>
+            </button>
+            <button class="sidebar-btn" id="btn-mute" onclick="toggleMute()">
+              <span id="mute-icon">🔊</span>
+              <span>เสียงเปิด (M)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom controls summary bar -->
+      <div class="cabinet-footer">
+        <span class="footer-tip">💡 ทริค: กด <b>C</b> เพื่อสลับเก็บชิ้นส่วนไว้ใช้ยามคับขัน | กด <b>Space</b> วางทันที</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== GAME OVER SCREEN ========== -->
+  <div id="screen-gameover" class="screen">
+    <div class="gameover-card">
+      <div class="gameover-header">
+        <span class="gameover-badge">RUN CONCLUDED</span>
+        <h2 class="gameover-title">GAME OVER</h2>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-stat-box highlight">
+          <span class="res-label">FINAL SCORE</span>
+          <span class="res-num mono" id="result-score">0</span>
+        </div>
+        <div class="result-stat-box">
+          <span class="res-label">PILOT</span>
+          <span class="res-val" id="result-player">—</span>
+        </div>
+        <div class="result-stat-box">
+          <span class="res-label">LEVEL REACHED</span>
+          <span class="res-val mono" id="result-level">1</span>
+        </div>
+        <div class="result-stat-box">
+          <span class="res-label">LINES DESTROYED</span>
+          <span class="res-val mono" id="result-lines">0</span>
+        </div>
+        <div class="result-stat-box rank-box">
+          <span class="res-label">GLOBAL RANK</span>
+          <span class="res-val rank-val mono" id="result-rank">—</span>
+        </div>
+      </div>
+
+      <div id="save-status" class="save-status"></div>
+
+      <div class="gameover-actions">
+        <button class="btn-primary-action" id="btn-play-again" onclick="startGame()">
+          <span>เล่นอีกครั้งทันที</span>
+          <span class="btn-arrow">↺</span>
+        </button>
+        <div class="dual-btn-row">
+          <button class="btn-card" id="btn-view-leaderboard" onclick="openLeaderboard()">🏆 อันดับ</button>
+          <button class="btn-card" id="btn-leave-feedback" onclick="openFeedback()">💬 ติชม</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== LEADERBOARD SCREEN ========== -->
+  <div id="screen-leaderboard" class="screen">
+    <div class="content-modal">
+      <div class="screen-header">
+        <button class="btn-back" id="btn-back-from-leaderboard" onclick="goBack()">← ย้อนกลับ</button>
+        <h2>ตารางอันดับยอดฝีมือ</h2>
+      </div>
+      <div id="leaderboard-list" class="leaderboard-list">
+        <div class="loading">กำลังเชื่อมต่อฐานข้อมูล...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== FEEDBACK SCREEN ========== -->
+  <div id="screen-feedback" class="screen">
+    <div class="content-modal">
+      <div class="screen-header">
+        <button class="btn-back" id="btn-back-from-feedback" onclick="goBack()">← ย้อนกลับ</button>
+        <h2>ส่งความคิดเห็นถึงผู้พัฒนา</h2>
+      </div>
+      <div class="feedback-form">
+        <div class="form-group">
+          <label>ระดับความพึงพอใจ</label>
+          <div class="rating-group" id="rating-group">
+            <button class="rating-btn" type="button" data-rating="1">1</button>
+            <button class="rating-btn" type="button" data-rating="2">2</button>
+            <button class="rating-btn" type="button" data-rating="3">3</button>
+            <button class="rating-btn" type="button" data-rating="4">4</button>
+            <button class="rating-btn" type="button" data-rating="5">5</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="feedback-name">ชื่อของคุณ</label>
+          <input type="text" id="feedback-name" placeholder="ชื่อที่ต้องการให้แสดง" maxlength="20">
+        </div>
+        <div class="form-group">
+          <label for="feedback-message">ข้อความเสนอแนะ / ความรู้สึกในการเล่น</label>
+          <textarea id="feedback-message" placeholder="พิมพ์ข้อความความคิดเห็นของคุณที่นี่..." rows="4"></textarea>
+        </div>
+        <button class="btn-primary-action" id="btn-submit-feedback" onclick="submitFeedback()">
+          <span>บันทึกและส่งข้อความ</span>
+        </button>
+        <div id="feedback-status" class="save-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Scripts -->
+  <script src="config.js"></script>
+  <script src="sound.js"></script>
+  <script src="game.js"></script>
+  <script src="app.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</body>
+</html>
