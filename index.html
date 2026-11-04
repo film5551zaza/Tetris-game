@@ -2,74 +2,92 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TETRIS — Modern Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TETRIS — 16-Bit Pixel RPG feat. Cool Red T-Rex</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@500;600;700;800&family=Pixelify+Sans:wght@500;600;700;800&family=VT323&display=swap" rel="stylesheet">
   <style>
 /* =============================================
-   TETRIS PRO — Modern Arcade Studio Styling
+   TETRIS — 16-Bit Pixel RPG (Stardew-Vibe & T-Rex)
    ============================================= */
 
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 :root {
-  --bg-deep:      #0b0f19;
-  --bg-card:      rgba(17, 24, 39, 0.85);
-  --bg-card-sub:  rgba(31, 41, 55, 0.7);
-  --border-subtle:rgba(255, 255, 255, 0.08);
-  --border-active:rgba(255, 255, 255, 0.2);
-  --text-main:    #f9fafb;
-  --text-muted:   #9ca3af;
-  --accent-cyan:  #06b6d4;
-  --accent-blue:  #3b82f6;
-  --accent-gold:  #f59e0b;
-  --accent-pink:  #ec4899;
+  --px-bg:          #1A1423;
+  --px-bg-dark:     #120D1A;
+  --px-panel:       #FFF3DB;
+  --px-panel-dark:  #EAD6B5;
+  --px-wood:        #9E5727;
+  --px-wood-dark:   #5A2E12;
+  --px-border:      #35180B;
+  --px-gold:        #FBB034;
+  --px-gold-bright: #FFE066;
+  --px-red:         #C62828;
+  --px-red-dark:    #8E0000;
+  --px-blue:        #0277BD;
+  --px-text:        #2C170B;
+  --px-text-muted:  #5A3822;
+  --px-green:       #2E7D32;
+}
+
+::selection {
+  background: var(--px-gold);
+  color: var(--px-border);
 }
 
 html, body {
   height: 100%;
   overflow-x: hidden;
+  image-rendering: pixelated;
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: var(--bg-deep);
-  color: var(--text-main);
+  font-family: 'Pixelify Sans', 'Noto Sans Thai', sans-serif;
+  background-color: var(--px-bg);
+  color: var(--px-text);
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   position: relative;
-  background-image: 
-    radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.12) 0%, transparent 65%),
-    radial-gradient(circle at 10% 90%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+  background-image:
+    radial-gradient(circle at 50% 15%, rgba(251, 176, 52, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 15% 85%, rgba(229, 57, 53, 0.1) 0%, transparent 50%),
+    linear-gradient(rgba(26, 20, 35, 0.94), rgba(18, 13, 26, 0.98));
 }
 
 .mono {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'VT323', 'Pixelify Sans', monospace;
+  font-size: 1.2em;
+  letter-spacing: 1px;
 }
 
-/* ─── Ambient Backdrop ─────────────────────── */
+/* ─── Retro Starfield Backdrop ─────────────── */
 
-.ambient-grid {
+.ambient-stars {
   position: fixed;
   inset: 0;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 32px 32px;
+    radial-gradient(1.5px 1.5px at 20px 30px, #FFF, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 100px 150px, #FFE066, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 250px 80px, #FFF, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 320px 220px, #FFE066, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 450px 180px, #FFF, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  opacity: 0.35;
   pointer-events: none;
   z-index: 0;
 }
 
-/* ─── Screens Manager ─────────────────────── */
+/* ─── Screen Manager ───────────────────────── */
 
 .screen {
   display: none;
@@ -77,7 +95,7 @@ body {
   min-height: 100vh;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 16px;
   position: relative;
   z-index: 1;
 }
@@ -86,171 +104,256 @@ body {
   display: flex;
 }
 
-/* ─── Shared Buttons & Inputs ─────────────── */
+/* ─── 16-Bit Pixel Panel Framing ───────────── */
 
-.btn-primary-action {
+.pixel-box {
+  background-color: var(--px-panel);
+  border: 4px solid var(--px-border);
+  box-shadow: 
+    inset -4px -4px 0px #C9A979,
+    inset 4px 4px 0px #FFF9EC,
+    0 8px 0px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.pixel-box-wood {
+  background-color: var(--px-panel);
+  border: 4px solid var(--px-border);
+  box-shadow: 
+    inset -4px -4px 0px var(--px-wood-dark),
+    inset 4px 4px 0px #D7995E,
+    0 8px 0px rgba(0, 0, 0, 0.45);
+}
+
+/* ─── Buttons ──────────────────────────────── */
+
+.btn-pixel-primary {
   width: 100%;
-  padding: 14px 22px;
-  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-  color: #ffffff;
-  border: none;
-  border-radius: 12px;
+  padding: 14px 20px;
+  background-color: var(--px-red);
+  color: #FFFFFF;
+  border: 4px solid var(--px-border);
   font-family: inherit;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.35);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 12px;
+  box-shadow: 
+    inset -3px -3px 0px var(--px-red-dark),
+    inset 3px 3px 0px #FF8A80,
+    0 5px 0px #1E0C04;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  user-select: none;
 }
 
-.btn-primary-action:hover {
+.btn-pixel-primary:hover {
+  filter: brightness(1.08);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
-  filter: brightness(1.1);
+  box-shadow: 
+    inset -3px -3px 0px var(--px-red-dark),
+    inset 3px 3px 0px #FF8A80,
+    0 7px 0px #1E0C04;
 }
 
-.btn-primary-action:active {
-  transform: translateY(0);
+.btn-pixel-primary:active {
+  transform: translateY(4px);
+  box-shadow: 
+    inset -2px -2px 0px var(--px-red-dark),
+    inset 2px 2px 0px #FF8A80,
+    0 1px 0px #1E0C04;
 }
 
-.btn-card {
+.btn-pixel-secondary {
   flex: 1;
-  padding: 12px 16px;
-  background: var(--bg-card-sub);
-  color: var(--text-main);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
+  padding: 12px 14px;
+  background-color: var(--px-wood);
+  color: #FFF9EC;
+  border: 3px solid var(--px-border);
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  backdrop-filter: blur(8px);
-  transition: all 0.2s;
+  box-shadow: 
+    inset -3px -3px 0px var(--px-wood-dark),
+    inset 3px 3px 0px #D7995E,
+    0 4px 0px #1E0C04;
+  transition: transform 0.1s ease;
+  user-select: none;
 }
 
-.btn-card:hover {
-  background: rgba(55, 65, 81, 0.8);
-  border-color: var(--border-active);
-  transform: translateY(-1px);
+.btn-pixel-secondary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
 }
 
-.btn-back {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 600;
+.btn-pixel-secondary:active {
+  transform: translateY(3px);
+  box-shadow: 
+    inset -2px -2px 0px var(--px-wood-dark),
+    inset 2px 2px 0px #D7995E,
+    0 1px 0px #1E0C04;
+}
+
+.btn-pixel-back {
+  background-color: var(--px-wood);
+  border: 3px solid var(--px-border);
+  color: #FFF;
   padding: 8px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.15s;
+  box-shadow: 
+    inset -2px -2px 0px var(--px-wood-dark),
+    inset 2px 2px 0px #D7995E,
+    0 3px 0px #1E0C04;
 }
 
-.btn-back:hover {
-  color: #fff;
-  border-color: var(--border-active);
+.btn-pixel-back:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0px #1E0C04;
 }
 
-/* ─── START SCREEN ────────────────────────── */
+/* ─── START SCREEN (T-Rex Hero) ────────────── */
 
-.start-card {
+.start-sheet {
   width: 100%;
   max-width: 440px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 24px;
-  padding: 40px 32px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  animation: fadeIn 0.4s ease-out;
+  gap: 16px;
 }
 
-.logo-box {
-  text-align: center;
+.trex-hero-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 0 4px;
+  position: relative;
 }
 
-.badge-tag {
-  display: inline-block;
-  padding: 4px 12px;
-  background: rgba(6, 182, 212, 0.15);
-  color: var(--accent-cyan);
-  border: 1px solid rgba(6, 182, 212, 0.3);
-  border-radius: 20px;
+.trex-mascot-box {
+  width: 110px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pixelBounce 1.4s steps(2) infinite;
+}
+
+.trex-mascot-box svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 6px 0px rgba(0,0,0,0.4));
+}
+
+.pixel-speech-bubble {
+  background-color: #FFFFFF;
+  border: 3px solid var(--px-border);
+  padding: 10px 14px;
+  border-radius: 4px;
+  position: relative;
+  max-width: 200px;
+  box-shadow: 0 4px 0px rgba(0,0,0,0.3);
+}
+
+.pixel-speech-bubble::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 10px 6px 0;
+  border-style: solid;
+  border-color: transparent var(--px-border) transparent transparent;
+}
+
+.pixel-speech-bubble::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 4px 7px 4px 0;
+  border-style: solid;
+  border-color: transparent #FFFFFF transparent transparent;
+}
+
+.bubble-title {
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 1.5px;
-  margin-bottom: 12px;
+  color: var(--px-red);
+  letter-spacing: 0.5px;
 }
 
-.logo-box h1 {
-  font-size: 64px;
-  font-weight: 800;
-  letter-spacing: -2px;
-  line-height: 1;
-  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.logo-sub {
+.bubble-text {
   font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 8px;
+  font-weight: 700;
+  color: var(--px-border);
+  line-height: 1.3;
+  margin-top: 2px;
+}
+
+.poster-header {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.poster-header h1 {
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--px-gold);
+  letter-spacing: 2px;
+  text-shadow: 
+    3px 3px 0px var(--px-wood-dark),
+    -2px -2px 0px #FFF,
+    4px 5px 0px var(--px-border);
+}
+
+.poster-sub {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--px-text-muted);
+  letter-spacing: 1px;
+  margin-top: 2px;
 }
 
 .name-form {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .name-form label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  color: var(--accent-cyan);
-}
-
-.input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.input-icon {
-  position: absolute;
-  left: 14px;
-  font-size: 16px;
-  opacity: 0.7;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--px-border);
 }
 
 .input-wrapper input {
   width: 100%;
-  padding: 14px 14px 14px 44px;
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  color: #fff;
-  font-size: 15px;
+  padding: 12px 14px;
+  background-color: #FFFFFF;
+  border: 3px solid var(--px-border);
+  color: var(--px-text);
   font-family: inherit;
-  outline: none;
-  transition: all 0.2s;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: inset 2px 2px 0px rgba(0,0,0,0.15);
 }
 
 .input-wrapper input:focus {
-  border-color: var(--accent-cyan);
-  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+  outline: none;
+  border-color: var(--px-red);
 }
 
 .start-actions {
@@ -258,244 +361,201 @@ body {
   gap: 10px;
 }
 
-.keys-grid {
+.keys-legend {
+  padding: 14px 18px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  padding: 14px;
+  gap: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--px-text-muted);
 }
 
 .key-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--text-muted);
+  gap: 6px;
 }
 
 kbd {
-  padding: 3px 8px;
-  background: #1f2937;
-  border: 1px solid #374151;
-  border-radius: 6px;
-  color: #f3f4f6;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 700;
-  box-shadow: 0 2px 0 #111827;
+  padding: 2px 6px;
+  background-color: #FFF;
+  border: 2px solid var(--px-border);
+  color: var(--px-border);
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+  box-shadow: 0 2px 0px rgba(0,0,0,0.25);
 }
 
-/* ─── ARCADE CABINET (GAME SCREEN) ────────── */
+/* ─── GAME SCREEN (Pixel Arcade) ───────────── */
 
-.arcade-cabinet {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 28px;
-  padding: 24px 28px 20px;
-  backdrop-filter: blur(24px);
-  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+.game-cabinet {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 600px;
 }
 
-.cabinet-top-bar {
+.game-top-bar {
+  width: 100%;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 14px;
+  background-color: var(--px-wood);
+  border: 3px solid var(--px-border);
+  color: #FFF;
+  box-shadow: 
+    inset -3px -3px 0px var(--px-wood-dark),
+    inset 3px 3px 0px #D7995E,
+    0 4px 0px rgba(0,0,0,0.3);
 }
 
-.top-brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.brand-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 10px #10b981;
-}
-
-.brand-name {
-  font-size: 13px;
+.game-title-badge {
+  font-size: 14px;
   font-weight: 800;
-  letter-spacing: 2px;
-  color: #e2e8f0;
+  letter-spacing: 1px;
+  color: #FFF9C4;
 }
 
-.status-pill {
-  font-size: 12px;
+.pilot-tag {
+  font-size: 13px;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 4px 12px;
-  border-radius: 20px;
-  color: var(--text-muted);
+  color: #FFF;
 }
 
 .game-layout {
   display: flex;
   align-items: flex-start;
-  gap: 22px;
-}
-
-.game-sidebar {
-  width: 140px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.arcade-card {
-  background: var(--bg-card-sub);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-title {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  color: var(--text-muted);
-}
-
-.key-badge {
-  font-size: 10px;
-  font-weight: 700;
-  background: #374151;
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: #93c5fd;
-}
-
-.preview-box {
-  background: #060913;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 6px;
+  gap: 14px;
+  width: 100%;
 }
 
-.stat-number {
-  font-size: 26px;
+.sidebar-column {
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stat-card {
+  padding: 10px;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 11px;
   font-weight: 800;
-  color: #fff;
+  color: var(--px-text-muted);
+  letter-spacing: 0.5px;
+}
+
+.stat-val {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--px-border);
   line-height: 1.1;
-  letter-spacing: -0.5px;
+  margin-top: 2px;
 }
 
 .stat-sub {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  color: var(--text-muted);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--px-text-muted);
+  border-top: 2px dashed rgba(53, 24, 11, 0.2);
   margin-top: 4px;
+  padding-top: 4px;
 }
 
-.combo-display {
+.preview-well {
+  background-color: #1A1423;
+  border: 3px solid var(--px-border);
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  padding: 4px;
+  margin-top: 4px;
+  box-shadow: inset 2px 2px 0px rgba(0,0,0,0.6);
 }
 
-.combo-val {
-  font-size: 20px;
+/* ─── T-Rex Companion Box in Game ─────────── */
+
+.trex-companion-box {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  background-color: var(--px-panel-dark);
+}
+
+.companion-sprite {
+  width: 68px;
+  height: 68px;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.companion-sprite.cheering {
+  transform: scale(1.22) rotate(-6deg);
+}
+
+.companion-bubble {
+  background-color: #FFFFFF;
+  border: 2px solid var(--px-border);
+  padding: 4px 6px;
+  font-size: 10px;
   font-weight: 800;
-  color: var(--accent-gold);
-}
-
-.progress-bar-wrap {
-  width: 100%;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 6px;
-  overflow: hidden;
-  margin: 4px 0;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(to right, #06b6d4, #3b82f6);
-  border-radius: 6px;
-  transition: width 0.3s ease;
-}
-
-.sidebar-btn {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  padding: 10px;
-  color: var(--text-main);
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
+  color: var(--px-red);
+  text-align: center;
+  line-height: 1.2;
+  border-radius: 3px;
+  box-shadow: 0 2px 0px rgba(0,0,0,0.2);
+  min-height: 28px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.15s;
-}
-
-.sidebar-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--border-active);
+  justify-content: center;
 }
 
 /* ─── Game Board Wrapper ──────────────────── */
 
 .game-board-wrapper {
   position: relative;
-  background: #030712;
-  border-radius: 14px;
-  padding: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0 25px rgba(6, 182, 212, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.8);
+  background-color: #1A1423;
+  border: 4px solid var(--px-border);
+  box-shadow: 
+    inset -3px -3px 0px rgba(0,0,0,0.7),
+    inset 3px 3px 0px rgba(255,255,255,0.1),
+    0 8px 0px rgba(0,0,0,0.4);
+  line-height: 0;
 }
 
 #game-canvas {
   display: block;
-  background: #050814;
-  border-radius: 10px;
+  background-color: #120D1A;
 }
 
 .floating-banner {
   position: absolute;
-  top: 45%;
+  top: 40%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
-  background: linear-gradient(135deg, #ec4899, #8b5cf6);
-  color: #fff;
-  padding: 8px 18px;
-  border-radius: 20px;
-  font-weight: 800;
-  font-size: 18px;
-  letter-spacing: 1.5px;
-  box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+  transform: translate(-50%, -50%) scale(0.6);
+  background-color: var(--px-gold);
+  color: var(--px-border);
+  border: 3px solid var(--px-border);
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  box-shadow: 0 6px 0px var(--px-border);
   pointer-events: none;
   opacity: 0;
-  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
   z-index: 10;
+  white-space: nowrap;
 }
 
 .floating-banner.show {
@@ -507,9 +567,7 @@ kbd {
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(3, 7, 18, 0.92);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
+  background-color: rgba(18, 13, 26, 0.92);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -521,171 +579,231 @@ kbd {
 }
 
 .pause-box {
+  padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   width: 220px;
 }
 
 .pause-title {
-  font-size: 32px;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--px-border);
+  text-shadow: none;
+}
+
+/* ─── MOBILE TOUCH CONTROLS ───────────────── */
+
+.mobile-controls {
+  display: none;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 10px;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.touch-controls-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 4px 8px;
+  gap: 12px;
+}
+
+.dpad-cluster {
+  display: grid;
+  grid-template-columns: repeat(3, 52px);
+  grid-template-rows: repeat(2, 50px);
+  gap: 6px;
+}
+
+.btn-touch {
+  background-color: var(--px-wood);
+  border: 3px solid var(--px-border);
+  color: #FFF;
+  font-family: 'VT323', monospace;
+  font-size: 26px;
   font-weight: 800;
-  letter-spacing: 6px;
-  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    inset -2px -2px 0px var(--px-wood-dark),
+    inset 2px 2px 0px #D7995E,
+    0 3px 0px var(--px-border);
+  cursor: pointer;
 }
 
-.overlay-btn {
-  width: 100%;
+.btn-touch:active, .btn-touch.active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0px var(--px-border);
+  background-color: var(--px-gold);
+  color: var(--px-border);
 }
 
-.cabinet-footer {
-  text-align: center;
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 14px;
+.btn-touch-left  { grid-column: 1; grid-row: 2; }
+.btn-touch-down  { grid-column: 2; grid-row: 2; }
+.btn-touch-right { grid-column: 3; grid-row: 2; }
+.btn-touch-up    { grid-column: 2; grid-row: 1; }
+
+.action-cluster {
+  display: flex;
+  gap: 8px;
 }
 
-.footer-tip {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.footer-tip b {
-  color: #fff;
-}
-
-/* ─── GAME OVER CARD ──────────────────────── */
-
-.gameover-card {
-  width: 100%;
-  max-width: 440px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 24px;
-  padding: 36px 30px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+.btn-action-touch {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: var(--px-red);
+  border: 3px solid var(--px-border);
+  color: #FFF;
+  font-size: 13px;
+  font-weight: 800;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    inset -2px -2px 0px var(--px-red-dark),
+    inset 2px 2px 0px #FF8A80,
+    0 3px 0px var(--px-border);
 }
 
-.gameover-header {
+.btn-action-touch.drop-btn {
+  background-color: var(--px-gold);
+  color: var(--px-border);
+  box-shadow: 
+    inset -2px -2px 0px #C98816,
+    inset 2px 2px 0px #FFF399,
+    0 3px 0px var(--px-border);
+}
+
+.btn-action-touch.hold-btn {
+  background-color: var(--px-blue);
+  box-shadow: 
+    inset -2px -2px 0px #01579B,
+    inset 2px 2px 0px #4FC3F7,
+    0 3px 0px var(--px-border);
+}
+
+.btn-action-touch:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0px var(--px-border);
+}
+
+/* ─── GAME OVER SHEET ──────────────────────── */
+
+.gameover-sheet {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   text-align: center;
 }
 
-.gameover-badge {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.15);
-  padding: 4px 10px;
-  border-radius: 12px;
+.gameover-header h2 {
+  font-size: 38px;
+  font-weight: 900;
+  color: var(--px-red);
+  text-shadow: 2px 2px 0px var(--px-border);
 }
 
-.gameover-title {
-  font-size: 44px;
-  font-weight: 800;
-  letter-spacing: -1.5px;
-  margin-top: 8px;
+.gameover-rex-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
-.result-grid {
+.result-ledger {
+  background-color: #FFFFFF;
+  border: 3px solid var(--px-border);
+  padding: 12px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 8px;
+  text-align: left;
 }
 
-.result-stat-box {
-  background: var(--bg-card-sub);
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.ledger-cell {
+  padding: 6px;
+  border-bottom: 2px dashed rgba(53, 24, 11, 0.15);
 }
 
-.result-stat-box.highlight {
+.ledger-cell.full {
   grid-column: span 2;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(59, 130, 246, 0.15));
-  border-color: rgba(6, 182, 212, 0.4);
+  background-color: #FFF3DB;
+  border-bottom: none;
+  border: 2px solid var(--px-border);
+  padding: 8px 12px;
 }
 
 .res-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--px-text-muted);
 }
 
 .res-num {
-  font-size: 28px;
-  font-weight: 800;
-  color: #fff;
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--px-border);
 }
 
 .res-val {
   font-size: 16px;
-  font-weight: 700;
-}
-
-.rank-val {
-  color: var(--accent-gold);
+  font-weight: 800;
+  color: var(--px-border);
 }
 
 .save-status {
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: center;
-  min-height: 18px;
-}
-
-.gameover-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--px-text-muted);
+  min-height: 20px;
 }
 
 .dual-btn-row {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
-/* ─── MODAL (LEADERBOARD & FEEDBACK) ──────── */
+/* ─── LEADERBOARD & FEEDBACK MODAL ─────────── */
 
-.content-modal {
+.content-sheet {
   width: 100%;
-  max-width: 480px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 24px;
-  padding: 32px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  max-width: 440px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
-.screen-header {
+.sheet-top-bar {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 3px solid var(--px-border);
 }
 
-.screen-header h2 {
+.sheet-top-bar h2 {
   font-size: 22px;
   font-weight: 800;
+  color: var(--px-border);
 }
 
 .leaderboard-list {
-  background: var(--bg-card-sub);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  overflow: hidden;
-  max-height: 380px;
+  background-color: #FFFFFF;
+  border: 3px solid var(--px-border);
+  max-height: 320px;
   overflow-y: auto;
 }
 
@@ -693,155 +811,174 @@ kbd {
   display: grid;
   grid-template-columns: 44px 1fr auto;
   align-items: center;
-  padding: 12px 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  font-size: 14px;
-  gap: 12px;
-  transition: background 0.15s;
-}
-
-.leaderboard-row:hover {
-  background: rgba(255, 255, 255, 0.04);
+  padding: 10px 14px;
+  border-bottom: 2px dashed rgba(53, 24, 11, 0.15);
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .leaderboard-row.highlight {
-  background: rgba(6, 182, 212, 0.12);
-  border-left: 3px solid var(--accent-cyan);
-}
-
-.rank {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-muted);
+  background-color: #FFF0C2;
 }
 
 .rank.top {
-  font-size: 18px;
-}
-
-.lb-name {
-  font-weight: 600;
+  color: var(--px-red);
+  font-weight: 900;
 }
 
 .lb-score {
-  font-weight: 800;
-  font-size: 16px;
-  color: var(--accent-cyan);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  color: var(--px-wood-dark);
 }
 
-.loading, .empty-state {
-  padding: 40px 20px;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-/* ─── FEEDBACK FORM ───────────────────────── */
+/* ─── STAR RATING SYSTEM (Feedback) ────────── */
 
 .feedback-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
+}
+
+.star-rating-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  background-color: #FFFFFF;
+  border: 3px solid var(--px-border);
+}
+
+.star-group {
+  display: flex;
+  gap: 8px;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  color: #D1C4B5;
+  transition: transform 0.1s ease, color 0.1s ease;
+  user-select: none;
+}
+
+.star-btn:hover, .star-btn.hovered, .star-btn.selected {
+  color: var(--px-gold);
+  transform: scale(1.15);
+}
+
+.star-rating-hint {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--px-red);
+  min-height: 18px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .form-group label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--accent-cyan);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--px-border);
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 12px 14px;
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  color: #fff;
-  font-size: 14px;
+  padding: 10px 12px;
+  background-color: #FFFFFF;
+  border: 3px solid var(--px-border);
+  color: var(--px-text);
   font-family: inherit;
-  outline: none;
-  transition: all 0.2s;
-  resize: vertical;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: var(--accent-cyan);
-}
-
-.rating-group {
-  display: flex;
-  gap: 10px;
-}
-
-.rating-btn {
-  flex: 1;
-  height: 44px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  color: var(--text-main);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s;
 }
 
-.rating-btn:hover {
-  border-color: var(--border-active);
+/* ─── Keyframe Animations ──────────────────── */
+
+@keyframes pixelBounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
 }
 
-.rating-btn.selected {
-  background: linear-gradient(135deg, #06b6d4, #3b82f6);
-  border-color: transparent;
-  box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
-}
+/* ─── Mobile Media Queries ─────────────────── */
 
-/* ─── Animation Keyframes ─────────────────── */
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ─── Responsive Media Queries ────────────── */
-
-@media (max-width: 720px) {
-  .arcade-cabinet {
-    padding: 16px;
-    border-radius: 18px;
+@media (max-width: 768px) {
+  .mobile-controls {
+    display: block;
   }
 
   .game-layout {
+    gap: 8px;
+  }
+
+  .sidebar-column {
+    width: 90px;
+  }
+
+  .stat-val {
+    font-size: 18px;
+  }
+
+  .stat-card {
+    padding: 6px;
+  }
+
+  .preview-well canvas {
+    width: 60px !important;
+    height: 48px !important;
+  }
+
+  .companion-sprite {
+    width: 52px;
+    height: 52px;
+  }
+
+  .companion-bubble {
+    font-size: 9px;
+  }
+
+  #game-canvas {
+    width: 220px !important;
+    height: 440px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .poster-header h1 {
+    font-size: 38px;
+  }
+
+  .trex-hero-container {
     flex-direction: column;
-    align-items: center;
-    gap: 14px;
+    text-align: center;
   }
 
-  .game-sidebar {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+  .pixel-speech-bubble::before,
+  .pixel-speech-bubble::after {
+    display: none;
   }
 
-  .arcade-card {
-    flex: 1;
-    min-width: 130px;
+  .dpad-cluster {
+    grid-template-columns: repeat(3, 44px);
+    grid-template-rows: repeat(2, 44px);
   }
 
-  .start-card, .gameover-card, .content-modal {
-    padding: 24px 18px;
+  .btn-touch {
+    font-size: 22px;
+  }
+
+  .btn-action-touch {
+    width: 48px;
+    height: 48px;
+    font-size: 11px;
   }
 }
 
@@ -849,161 +986,268 @@ kbd {
 </head>
 <body>
 
-  <!-- Subtle ambient background decorative elements -->
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
-  <div class="ambient-grid"></div>
+  <div class="ambient-stars"></div>
+
+  <!-- SVG SPRITE DEFS FOR COOL RED T-REX -->
+  <svg style="display: none;">
+    <defs>
+      <!-- Red T-Rex Standing / Cool Pose -->
+      <g id="icon-trex-idle">
+        <!-- Tail -->
+        <path d="M12 28 Q4 32 2 24 Q6 16 14 20 Z" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
+        <path d="M4 22 Q8 20 12 24" stroke="#B71C1C" stroke-width="2" fill="none"/>
+        <!-- Feet / Legs -->
+        <ellipse cx="16" cy="34" rx="4" ry="3" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
+        <ellipse cx="26" cy="35" rx="5" ry="3" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
+        <!-- Claws -->
+        <circle cx="13" cy="36" r="1.5" fill="#212121"/>
+        <circle cx="16" cy="37" r="1.5" fill="#212121"/>
+        <circle cx="24" cy="37" r="1.5" fill="#212121"/>
+        <circle cx="28" cy="37" r="1.5" fill="#212121"/>
+        <!-- Chubby Body -->
+        <ellipse cx="21" cy="24" rx="9" ry="10" fill="#E53935" stroke="#35180B" stroke-width="2"/>
+        <!-- Cream Belly -->
+        <path d="M19 19 Q25 19 25 28 Q20 31 17 26 Z" fill="#FFE0B2"/>
+        <!-- Black Hoodie Jacket -->
+        <path d="M13 18 Q21 16 28 20 L27 28 Q21 27 15 28 Z" fill="#1E1E24" stroke="#35180B" stroke-width="2"/>
+        <!-- Hoodie Strings -->
+        <line x1="18" y1="21" x2="17" y2="26" stroke="#FFF" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="22" y1="21" x2="23" y2="26" stroke="#FFF" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Small Arms -->
+        <path d="M23 22 Q27 23 26 26" stroke="#E53935" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <circle cx="27" cy="26" r="1" fill="#212121"/>
+        <!-- Big Cute Head -->
+        <path d="M15 14 Q14 4 25 4 Q35 4 36 12 Q36 18 26 18 Q16 18 15 14 Z" fill="#E53935" stroke="#35180B" stroke-width="2"/>
+        <!-- Spikes on Head -->
+        <polygon points="17,5 15,2 19,4" fill="#B71C1C"/>
+        <polygon points="14,9 11,8 15,11" fill="#B71C1C"/>
+        <!-- Snout / Smug Smile with Teef -->
+        <path d="M24 14 Q32 14 34 12" stroke="#35180B" stroke-width="2" fill="none"/>
+        <polygon points="27,14 28,16 29,14" fill="#FFF"/>
+        <polygon points="31,13 32,15 33,13" fill="#FFF"/>
+        <!-- Cool Wayfarer Sunglasses -->
+        <polygon points="19,7 26,6 25,12 18,11" fill="#111" stroke="#35180B" stroke-width="1.5"/>
+        <polygon points="27,6 35,7 34,13 27,12" fill="#111" stroke="#35180B" stroke-width="1.5"/>
+        <line x1="25" y1="8" x2="27" y2="8" stroke="#35180B" stroke-width="2"/>
+        <!-- Sunglasses Reflection (Gleam) -->
+        <polygon points="20,8 24,7 23,9 19,10" fill="#4FC3F7" opacity="0.8"/>
+        <polygon points="28,8 33,9 32,10 28,9" fill="#4FC3F7" opacity="0.8"/>
+      </g>
+
+      <!-- Red T-Rex Roaring / Celebrating Pose -->
+      <g id="icon-trex-cheer">
+        <!-- Tail High -->
+        <path d="M12 28 Q2 26 4 16 Q8 14 14 20 Z" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
+        <!-- Legs Jumping -->
+        <ellipse cx="16" cy="34" rx="4" ry="4" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
+        <ellipse cx="26" cy="33" rx="5" ry="4" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
+        <circle cx="13" cy="37" r="1.5" fill="#212121"/>
+        <circle cx="16" cy="38" r="1.5" fill="#212121"/>
+        <circle cx="25" cy="37" r="1.5" fill="#212121"/>
+        <circle cx="28" cy="37" r="1.5" fill="#212121"/>
+        <!-- Body -->
+        <ellipse cx="21" cy="23" rx="9" ry="10" fill="#E53935" stroke="#35180B" stroke-width="2"/>
+        <path d="M19 19 Q25 19 25 28 Q20 31 17 26 Z" fill="#FFE0B2"/>
+        <path d="M13 18 Q21 16 28 20 L27 28 Q21 27 15 28 Z" fill="#1E1E24" stroke="#35180B" stroke-width="2"/>
+        <!-- Arms Up (Cheering!) -->
+        <path d="M14 19 Q12 12 16 12" stroke="#E53935" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M26 19 Q30 13 32 15" stroke="#E53935" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <circle cx="16" cy="11" r="1" fill="#212121"/>
+        <circle cx="33" cy="14" r="1" fill="#212121"/>
+        <!-- Head Roaring Up -->
+        <path d="M16 13 Q16 3 26 3 Q36 3 37 10 Q37 17 28 17 Q17 17 16 13 Z" fill="#E53935" stroke="#35180B" stroke-width="2"/>
+        <!-- Open Mouth with Teeth -->
+        <path d="M25 12 Q32 10 34 15 Q29 17 25 14 Z" fill="#B71C1C" stroke="#35180B" stroke-width="1.5"/>
+        <polygon points="27,12 28,14 29,12" fill="#FFF"/>
+        <polygon points="31,11 32,13 33,12" fill="#FFF"/>
+        <!-- Sunglasses Tilted Up (Cool Wink) -->
+        <polygon points="19,5 26,4 25,10 18,9" fill="#111" stroke="#35180B" stroke-width="1.5"/>
+        <polygon points="27,4 35,5 34,11 27,10" fill="#111" stroke="#35180B" stroke-width="1.5"/>
+        <polygon points="20,6 24,5 23,7 19,8" fill="#FFEB3B" opacity="0.9"/>
+        <polygon points="28,6 33,7 32,8 28,7" fill="#FFEB3B" opacity="0.9"/>
+      </g>
+    </defs>
+  </svg>
 
   <!-- ========== START SCREEN ========== -->
   <div id="screen-start" class="screen active">
-    <div class="start-card">
-      <div class="logo-box">
-        <div class="badge-tag">ARCADE PRO EDITION</div>
-        <h1 class="glow-text">TETRIS</h1>
-        <p class="logo-sub">Pure Precision & Realtime Global Leaderboard</p>
+    <div class="start-sheet">
+      
+      <!-- T-Rex Hero Mascot Showcase -->
+      <div class="trex-hero-container">
+        <div class="trex-mascot-box">
+          <svg viewBox="0 0 40 40">
+            <use href="#icon-trex-idle"/>
+          </svg>
+        </div>
+        <div class="pixel-speech-bubble">
+          <div class="bubble-title">T-REX SAYS:</div>
+          <div class="bubble-text" id="start-trex-quote">"ถึงมือจะสั้น แต่เล่น Tetris โหดนะน้อง!"</div>
+        </div>
       </div>
 
-      <div class="name-form">
-        <label for="player-name">ชื่อผู้เล่น (PILOT CALLSIGN)</label>
+      <div class="poster-header">
+        <h1>TETRIS</h1>
+        <div class="poster-sub">16-BIT PIXEL RETRO ARCADE</div>
+      </div>
+
+      <div class="pixel-box name-form">
+        <label for="player-name">ชื่อผู้เล่น (PLAYER CALLSIGN)</label>
         <div class="input-wrapper">
-          <span class="input-icon">👤</span>
-          <input type="text" id="player-name" placeholder="กรอกชื่อของคุณ หรือกดเริ่มทันที" maxlength="18" autocomplete="off">
+          <input type="text" id="player-name" placeholder="พิมพ์ชื่อของคุณ หรือกดลุยเลย!" maxlength="16" autocomplete="off">
         </div>
-        <button id="btn-start" class="btn-primary-action" onclick="startGame()">
-          <span>เข้าสู่สังเวียนเกม</span>
-          <span class="btn-arrow">→</span>
+        <button id="btn-start" class="btn-pixel-primary" onclick="startGame()">
+          <span>START GAME! (เริ่มเล่น)</span>
+          <span>▶</span>
         </button>
       </div>
 
       <div class="start-actions">
-        <button class="btn-card" id="btn-leaderboard-from-start" onclick="openLeaderboard()">
-          <span class="btn-icon">🏆</span>
-          <span>ตารางอันดับเกียรติยศ</span>
+        <button class="btn-pixel-secondary" id="btn-leaderboard-from-start" onclick="openLeaderboard()">
+          <span>🏆 ตารางอันดับ</span>
         </button>
-        <button class="btn-card" id="btn-feedback-from-start" onclick="openFeedback()">
-          <span class="btn-icon">💬</span>
-          <span>ส่งข้อความติชม</span>
+        <button class="btn-pixel-secondary" id="btn-feedback-from-start" onclick="openFeedback()">
+          <span>⭐ ให้คะแนน / ติชม</span>
         </button>
       </div>
 
-      <!-- Quick keys showcase -->
-      <div class="keys-grid">
-        <div class="key-item"><kbd>←</kbd><kbd>→</kbd> <span>เลื่อน</span></div>
-        <div class="key-item"><kbd>↑</kbd> <span>หมุน</span></div>
-        <div class="key-item"><kbd>Space</kbd> <span>ทิ้งดิ่ง</span></div>
-        <div class="key-item"><kbd>C</kbd> <span>สลับเก็บตัว (Hold)</span></div>
-        <div class="key-item"><kbd>P</kbd> <span>หยุด</span></div>
+      <div class="pixel-box keys-legend">
+        <div class="key-item"><kbd>◀</kbd><kbd>▶</kbd> <span>เลื่อนบล็อก</span></div>
+        <div class="key-item"><kbd>▲</kbd> <span>หมุนบล็อก</span></div>
+        <div class="key-item"><kbd>▼</kbd> <span>เร่งลง</span></div>
+        <div class="key-item"><kbd>Space</kbd> <span>วางด่วน (Drop)</span></div>
+        <div class="key-item"><kbd>C</kbd> <span>เก็บตัว (Hold)</span></div>
+        <div class="key-item"><kbd>P</kbd> <span>พัก / เมนู</span></div>
       </div>
+
     </div>
   </div>
 
   <!-- ========== GAME SCREEN ========== -->
   <div id="screen-game" class="screen">
-    <div class="arcade-cabinet">
+    <div class="game-cabinet">
 
-      <!-- Header bar inside cabinet -->
-      <div class="cabinet-top-bar">
-        <div class="top-brand">
-          <span class="brand-dot"></span>
-          <span class="brand-name">TETRIS PRO</span>
-        </div>
-        <div class="top-status">
-          <span class="status-pill" id="display-player-name">PILOT: —</span>
-        </div>
+      <!-- Header bar -->
+      <div class="game-top-bar">
+        <div class="game-title-badge">🦖 PIXEL TETRIS</div>
+        <div class="pilot-tag mono" id="display-player-name">PLAYER: —</div>
       </div>
 
       <div class="game-layout">
 
-        <!-- Left Column: HOLD & SCORE -->
-        <div class="game-sidebar left">
+        <!-- Left Column: HOLD & T-REX COMPANION -->
+        <div class="sidebar-column left">
           <!-- HOLD BOX -->
-          <div class="arcade-card hold-card">
-            <div class="card-header">
-              <span class="card-title">HOLD</span>
-              <span class="key-badge">C</span>
-            </div>
-            <div class="preview-box">
-              <canvas id="hold-canvas" width="110" height="80"></canvas>
+          <div class="pixel-box stat-card">
+            <div class="stat-label">HOLD (C)</div>
+            <div class="preview-well">
+              <canvas id="hold-canvas" width="80" height="60"></canvas>
             </div>
           </div>
 
-          <!-- SCORE BOX -->
-          <div class="arcade-card score-card">
-            <span class="card-title">SCORE</span>
-            <div class="stat-number mono" id="display-score">0</div>
-            <div class="stat-sub">
-              <span>HI-SCORE</span>
-              <span class="mono" id="display-high-score">0</span>
+          <!-- T-REX INTERACTIVE COMPANION -->
+          <div class="pixel-box trex-companion-box" id="trex-companion" onclick="pokeTrex()">
+            <div class="companion-sprite" id="companion-svg-wrap">
+              <svg viewBox="0 0 40 40" id="companion-svg">
+                <use href="#icon-trex-idle"/>
+              </svg>
+            </div>
+            <div class="companion-bubble" id="companion-speech">
+              สู้ๆ วัยรุ่น!
             </div>
           </div>
 
-          <!-- COMBO BOX -->
-          <div class="arcade-card combo-card">
-            <span class="card-title">COMBO STREAK</span>
-            <div class="combo-display">
-              <span class="combo-icon">🔥</span>
-              <span class="combo-val mono" id="display-combo">0</span>
-            </div>
-          </div>
+          <!-- SOUND / PAUSE -->
+          <button class="btn-pixel-secondary" id="btn-pause" onclick="togglePause()">
+            <span>⏸ พัก</span>
+          </button>
+          <button class="btn-pixel-secondary" id="btn-mute" onclick="toggleMute()">
+            <span id="mute-label">🔊 เสียง</span>
+          </button>
         </div>
 
-        <!-- Center: GAME BOARD -->
+        <!-- Center: PIXEL GAME BOARD -->
         <div class="game-board-wrapper">
           <canvas id="game-canvas" width="300" height="600"></canvas>
           <div id="floating-banner" class="floating-banner"></div>
 
+          <!-- Pause Overlay -->
           <div id="pause-overlay" class="overlay hidden">
-            <div class="pause-box">
-              <p class="pause-title">PAUSED</p>
-              <button class="btn-primary-action overlay-btn" id="btn-resume" onclick="togglePause()">ดำเนินเกมต่อ</button>
-              <button class="btn-card overlay-btn" id="btn-quit" onclick="quitGame()">ออกจากเกม</button>
+            <div class="pixel-box pause-box">
+              <h2 class="pause-title">PAUSED</h2>
+              <button class="btn-pixel-primary" id="btn-resume" onclick="togglePause()">
+                <span>เล่นต่อ</span>
+              </button>
+              <button class="btn-pixel-secondary" id="btn-quit" onclick="quitGame()">
+                <span>หน้าหลัก</span>
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Right Column: NEXT & LEVEL -->
-        <div class="game-sidebar right">
+        <!-- Right Column: NEXT, SCORE, LEVEL -->
+        <div class="sidebar-column right">
           <!-- NEXT BOX -->
-          <div class="arcade-card next-card">
-            <div class="card-header">
-              <span class="card-title">NEXT</span>
-            </div>
-            <div class="preview-box">
-              <canvas id="next-canvas" width="110" height="80"></canvas>
+          <div class="pixel-box stat-card">
+            <div class="stat-label">NEXT</div>
+            <div class="preview-well">
+              <canvas id="next-canvas" width="80" height="60"></canvas>
             </div>
           </div>
 
-          <!-- LEVEL & PROGRESS -->
-          <div class="arcade-card level-card">
-            <span class="card-title">LEVEL</span>
-            <div class="stat-number mono" id="display-level">1</div>
-            <div class="progress-bar-wrap">
-              <div class="progress-bar-fill" id="level-progress-bar" style="width: 0%;"></div>
-            </div>
+          <!-- SCORE -->
+          <div class="pixel-box stat-card">
+            <div class="stat-label">SCORE</div>
+            <div class="stat-val mono" id="display-score">0</div>
             <div class="stat-sub">
-              <span>LINES CLEARED</span>
+              <span>HI: </span>
+              <span class="mono" id="display-high-score">0</span>
+            </div>
+          </div>
+
+          <!-- LEVEL & LINES -->
+          <div class="pixel-box stat-card">
+            <div class="stat-label">LEVEL</div>
+            <div class="stat-val mono" id="display-level">1</div>
+            <div class="stat-sub">
+              <span>LINES: </span>
               <span class="mono" id="display-lines">0</span>
             </div>
           </div>
 
-          <!-- CONTROLS & ACTIONS -->
-          <div class="arcade-card action-card">
-            <button class="sidebar-btn" id="btn-pause" onclick="togglePause()">
-              <span id="pause-icon">⏸</span>
-              <span>หยุดเกม (P)</span>
-            </button>
-            <button class="sidebar-btn" id="btn-mute" onclick="toggleMute()">
-              <span id="mute-icon">🔊</span>
-              <span>เสียงเปิด (M)</span>
-            </button>
+          <!-- COMBO -->
+          <div class="pixel-box stat-card">
+            <div class="stat-label">COMBO</div>
+            <div class="stat-val mono" id="display-combo" style="color: var(--px-red);">0</div>
           </div>
         </div>
 
       </div>
 
-      <!-- Bottom controls summary bar -->
-      <div class="cabinet-footer">
-        <span class="footer-tip">💡 ทริค: กด <b>C</b> เพื่อสลับเก็บชิ้นส่วนไว้ใช้ยามคับขัน | กด <b>Space</b> วางทันที</span>
+      <!-- MOBILE ON-SCREEN TOUCH CONTROLS -->
+      <div class="mobile-controls">
+        <div class="touch-controls-layout">
+          <!-- D-Pad Left / Down / Right -->
+          <div class="dpad-cluster">
+            <button class="btn-touch btn-touch-up" id="btn-touch-up">▲</button>
+            <button class="btn-touch btn-touch-left" id="btn-touch-left">◀</button>
+            <button class="btn-touch btn-touch-down" id="btn-touch-down">▼</button>
+            <button class="btn-touch btn-touch-right" id="btn-touch-right">▶</button>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-cluster">
+            <button class="btn-action-touch hold-btn" id="btn-touch-hold">
+              <span>HOLD</span>
+            </button>
+            <button class="btn-action-touch" id="btn-touch-rot">
+              <span>ROTATE</span>
+            </button>
+            <button class="btn-action-touch drop-btn" id="btn-touch-drop">
+              <span>DROP</span>
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -1011,98 +1255,126 @@ kbd {
 
   <!-- ========== GAME OVER SCREEN ========== -->
   <div id="screen-gameover" class="screen">
-    <div class="gameover-card">
+    <div class="pixel-box-wood gameover-sheet">
       <div class="gameover-header">
-        <span class="gameover-badge">RUN CONCLUDED</span>
-        <h2 class="gameover-title">GAME OVER</h2>
+        <h2>GAME OVER!</h2>
       </div>
 
-      <div class="result-grid">
-        <div class="result-stat-box highlight">
+      <div class="gameover-rex-row">
+        <div style="width: 70px; height: 70px;">
+          <svg viewBox="0 0 40 40">
+            <use href="#icon-trex-idle"/>
+          </svg>
+        </div>
+        <div class="pixel-speech-bubble" style="max-width: 220px;">
+          <div class="bubble-title">T-REX SAYS:</div>
+          <div class="bubble-text" id="gameover-trex-quote">"ไม่เป็นไรน่า! ไดโนเสาร์ยังสูญพันธุ์ได้ แต่นายเล่นใหม่ได้เสมอ!"</div>
+        </div>
+      </div>
+
+      <div class="result-ledger">
+        <div class="ledger-cell full">
           <span class="res-label">FINAL SCORE</span>
-          <span class="res-num mono" id="result-score">0</span>
+          <div class="res-num mono" id="result-score">0</div>
         </div>
-        <div class="result-stat-box">
-          <span class="res-label">PILOT</span>
-          <span class="res-val" id="result-player">—</span>
+        <div class="ledger-cell">
+          <span class="res-label">PLAYER</span>
+          <div class="res-val" id="result-player">—</div>
         </div>
-        <div class="result-stat-box">
-          <span class="res-label">LEVEL REACHED</span>
-          <span class="res-val mono" id="result-level">1</span>
+        <div class="ledger-cell">
+          <span class="res-label">LEVEL</span>
+          <div class="res-val mono" id="result-level">1</div>
         </div>
-        <div class="result-stat-box">
+        <div class="ledger-cell">
           <span class="res-label">LINES DESTROYED</span>
-          <span class="res-val mono" id="result-lines">0</span>
+          <div class="res-val mono" id="result-lines">0</div>
         </div>
-        <div class="result-stat-box rank-box">
+        <div class="ledger-cell">
           <span class="res-label">GLOBAL RANK</span>
-          <span class="res-val rank-val mono" id="result-rank">—</span>
+          <div class="res-val mono" id="result-rank" style="color: var(--px-red);">—</div>
         </div>
       </div>
 
       <div id="save-status" class="save-status"></div>
 
-      <div class="gameover-actions">
-        <button class="btn-primary-action" id="btn-play-again" onclick="startGame()">
-          <span>เล่นอีกครั้งทันที</span>
-          <span class="btn-arrow">↺</span>
+      <button class="btn-pixel-primary" id="btn-play-again" onclick="startGame()">
+        <span>PLAY AGAIN (เล่นอีกรอบ)</span>
+        <span>↺</span>
+      </button>
+
+      <div class="dual-btn-row">
+        <button class="btn-pixel-secondary" id="btn-view-leaderboard" onclick="openLeaderboard()">
+          <span>🏆 อันดับ</span>
         </button>
-        <div class="dual-btn-row">
-          <button class="btn-card" id="btn-view-leaderboard" onclick="openLeaderboard()">🏆 อันดับ</button>
-          <button class="btn-card" id="btn-leave-feedback" onclick="openFeedback()">💬 ติชม</button>
-        </div>
+        <button class="btn-pixel-secondary" id="btn-leave-feedback" onclick="openFeedback()">
+          <span>⭐ รีวิวเกม</span>
+        </button>
       </div>
     </div>
   </div>
 
   <!-- ========== LEADERBOARD SCREEN ========== -->
   <div id="screen-leaderboard" class="screen">
-    <div class="content-modal">
-      <div class="screen-header">
-        <button class="btn-back" id="btn-back-from-leaderboard" onclick="goBack()">← ย้อนกลับ</button>
-        <h2>ตารางอันดับยอดฝีมือ</h2>
+    <div class="pixel-box-wood content-sheet">
+      <div class="sheet-top-bar">
+        <h2>🏆 อันดับยอดฝีมือ</h2>
+        <button class="btn-pixel-back" id="btn-back-from-leaderboard" onclick="goBack()">
+          <span>◀ กลับ</span>
+        </button>
       </div>
       <div id="leaderboard-list" class="leaderboard-list">
-        <div class="loading">กำลังเชื่อมต่อฐานข้อมูล...</div>
+        <div class="loading">กำลังดึงข้อมูล...</div>
       </div>
     </div>
   </div>
 
-  <!-- ========== FEEDBACK SCREEN ========== -->
+  <!-- ========== FEEDBACK SCREEN (STAR RATING) ========== -->
   <div id="screen-feedback" class="screen">
-    <div class="content-modal">
-      <div class="screen-header">
-        <button class="btn-back" id="btn-back-from-feedback" onclick="goBack()">← ย้อนกลับ</button>
-        <h2>ส่งความคิดเห็นถึงผู้พัฒนา</h2>
+    <div class="pixel-box-wood content-sheet">
+      <div class="sheet-top-bar">
+        <h2>⭐ ติชม &amp; ให้คะแนน</h2>
+        <button class="btn-pixel-back" id="btn-back-from-feedback" onclick="goBack()">
+          <span>◀ กลับ</span>
+        </button>
       </div>
+
       <div class="feedback-form">
-        <div class="form-group">
-          <label>ระดับความพึงพอใจ</label>
-          <div class="rating-group" id="rating-group">
-            <button class="rating-btn" type="button" data-rating="1">1</button>
-            <button class="rating-btn" type="button" data-rating="2">2</button>
-            <button class="rating-btn" type="button" data-rating="3">3</button>
-            <button class="rating-btn" type="button" data-rating="4">4</button>
-            <button class="rating-btn" type="button" data-rating="5">5</button>
+        <!-- 5-STAR RATING SYSTEM -->
+        <div class="star-rating-container">
+          <label style="font-weight: 800; color: var(--px-border); font-size: 13px;">ความพึงพอใจของคุณ</label>
+          <div class="star-group" id="star-group">
+            <button class="star-btn" type="button" data-val="1">★</button>
+            <button class="star-btn" type="button" data-val="2">★</button>
+            <button class="star-btn" type="button" data-val="3">★</button>
+            <button class="star-btn" type="button" data-val="4">★</button>
+            <button class="star-btn" type="button" data-val="5">★</button>
           </div>
+          <div class="star-rating-hint" id="star-hint">กดเลือกดาวเพื่อประเมิน</div>
         </div>
+
         <div class="form-group">
           <label for="feedback-name">ชื่อของคุณ</label>
-          <input type="text" id="feedback-name" placeholder="ชื่อที่ต้องการให้แสดง" maxlength="20">
+          <input type="text" id="feedback-name" placeholder="ชื่อที่ต้องการให้แสดง" maxlength="18">
         </div>
+
         <div class="form-group">
-          <label for="feedback-message">ข้อความเสนอแนะ / ความรู้สึกในการเล่น</label>
-          <textarea id="feedback-message" placeholder="พิมพ์ข้อความความคิดเห็นของคุณที่นี่..." rows="4"></textarea>
+          <label for="feedback-message">ข้อความความคิดเห็น</label>
+          <textarea id="feedback-message" placeholder="บอกความรู้สึก หรือสิ่งที่อยากให้เพิ่ม..." rows="3"></textarea>
         </div>
-        <button class="btn-primary-action" id="btn-submit-feedback" onclick="submitFeedback()">
-          <span>บันทึกและส่งข้อความ</span>
+
+        <button class="btn-pixel-primary" id="btn-submit-feedback" onclick="submitFeedback()">
+          <span>ส่งความคิดเห็น 🦖⭐</span>
         </button>
         <div id="feedback-status" class="save-status"></div>
       </div>
     </div>
   </div>
 
+  <!-- Core Scripts -->
   <script>
+/* ====================================================
+   INLINE CONFIGURATION
+   ==================================================== */
 // config.js — Supabase configuration
 // ─────────────────────────────────────────────────
 
@@ -1110,6 +1382,9 @@ window.SUPABASE_URL      = 'https://anlcfwudbhrqqtwevces.supabase.co';
 window.SUPABASE_ANON_KEY = 'sb_publishable_pYijPM7RWg4088YIZiNIBg_xr5GUAt1';
 
 
+/* ====================================================
+   SYNTHESIZED RETRO AUDIO ENGINE
+   ==================================================== */
 /* =============================================
    sound.js — Web Audio Synthesizer Sound Engine
    (No external audio files needed, zero latency)
@@ -1271,22 +1546,25 @@ class SoundEngine {
 window.sound = new SoundEngine();
 
 
+/* ====================================================
+   TETRIS CORE GAME LOGIC
+   ==================================================== */
 /* =============================================
-   game.js — Tetris Engine with HOLD, COMBO & Events
+   game.js — Tetris Core Engine (Pixel RPG Edition)
    ============================================= */
 
 const BOARD_WIDTH  = 10;
 const BOARD_HEIGHT = 20;
 
-// High-contrast, vibrant arcade colors with clear distinction
+// 16-Bit Pixel Palette with crisp highlights & shadows
 const TETROMINOES = {
-  I: { shape: [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], color: '#06B6D4', light: '#67E8F9', dark: '#0891B2' }, // Cyan
-  O: { shape: [[1,1],[1,1]],                              color: '#FACC15', light: '#FEF08A', dark: '#CA8A04' }, // Bright Yellow
-  T: { shape: [[0,1,0],[1,1,1],[0,0,0]],                  color: '#A855F7', light: '#D8B4FE', dark: '#7E22CE' }, // Purple
-  S: { shape: [[0,1,1],[1,1,0],[0,0,0]],                  color: '#22C55E', light: '#86EFAC', dark: '#15803D' }, // Vivid Green
-  Z: { shape: [[1,1,0],[0,1,1],[0,0,0]],                  color: '#EF4444', light: '#FCA5A5', dark: '#B91C1C' }, // Crimson Red
-  J: { shape: [[1,0,0],[1,1,1],[0,0,0]],                  color: '#3B82F6', light: '#93C5FD', dark: '#1D4ED8' }, // Cobalt Blue
-  L: { shape: [[0,0,1],[1,1,1],[0,0,0]],                  color: '#F97316', light: '#FDBA74', dark: '#C2410C' }, // Deep Orange
+  I: { shape: [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], color: '#29B6F6', light: '#81D4FA', dark: '#0288D1' }, // Sky Cyan
+  O: { shape: [[1,1],[1,1]],                              color: '#FFCA28', light: '#FFF59D', dark: '#F57F17' }, // Pixel Gold
+  T: { shape: [[0,1,0],[1,1,1],[0,0,0]],                  color: '#AB47BC', light: '#CE93D8', dark: '#6A1B9A' }, // Magic Purple
+  S: { shape: [[0,1,1],[1,1,0],[0,0,0]],                  color: '#66BB6A', light: '#A5D6A7', dark: '#2E7D32' }, // Slime Green
+  Z: { shape: [[1,1,0],[0,1,1],[0,0,0]],                  color: '#EF5350', light: '#EF9A9A', dark: '#C62828' }, // Crimson Ruby
+  J: { shape: [[1,0,0],[1,1,1],[0,0,0]],                  color: '#42A5F5', light: '#90CAF9', dark: '#1565C0' }, // Ocean Cobalt
+  L: { shape: [[0,0,1],[1,1,1],[0,0,0]],                  color: '#FFA726', light: '#FFCC80', dark: '#E65100' }, // Ember Orange
 };
 
 const PIECE_NAMES = Object.keys(TETROMINOES);
@@ -1312,15 +1590,13 @@ class TetrisGame {
     this.canHold       = true;
     this.clearingLines = [];
     this.clearStartTime= 0;
-    this.clearDuration = 260; // ms for line clear effect
+    this.clearDuration = 240;
     this.isClearing    = false;
-    this.lastAction    = null; // 'SINGLE', 'DOUBLE', 'TRIPLE', 'TETRIS', 'COMBO'
+    this.lastAction    = null;
 
     this.nextPiece     = this._createPiece(this._nextFromBag());
     this._spawnPiece();
   }
-
-  /* ── Bag randomizer ─────────────────────── */
 
   _nextFromBag() {
     if (this.bag.length === 0) {
@@ -1350,10 +1626,9 @@ class TetrisGame {
     if (this._collides(this.currentPiece)) {
       this.gameOver = true;
       if (window.sound) window.sound.playGameOver();
+      if (window.onTrexGameOver) window.onTrexGameOver();
     }
   }
-
-  /* ── Hold Mechanism (C or Shift) ────────── */
 
   hold() {
     if (this.isClearing || this.paused || this.gameOver || !this.canHold) return false;
@@ -1373,8 +1648,6 @@ class TetrisGame {
     return true;
   }
 
-  /* ── Collision ──────────────────────────── */
-
   _collides(piece, dx = 0, dy = 0) {
     for (let py = 0; py < piece.shape.length; py++) {
       for (let px = 0; px < piece.shape[py].length; px++) {
@@ -1388,8 +1661,6 @@ class TetrisGame {
     }
     return false;
   }
-
-  /* ── Moves ──────────────────────────────── */
 
   moveLeft() {
     if (this.isClearing || this.paused || this.gameOver) return false;
@@ -1431,7 +1702,6 @@ class TetrisGame {
     );
     const rotatedPiece = { ...this.currentPiece, shape: rotated };
 
-    // Standard SRS wall-kick offsets
     for (const kick of [0, -1, 1, -2, 2]) {
       if (!this._collides({ ...rotatedPiece, x: rotatedPiece.x + kick })) {
         this.currentPiece = { ...rotatedPiece, x: rotatedPiece.x + kick };
@@ -1455,16 +1725,12 @@ class TetrisGame {
     return dist;
   }
 
-  /* ── Ghost piece ────────────────────────── */
-
   getGhostPiece() {
     if (!this.currentPiece) return null;
     const ghost = { ...this.currentPiece, shape: this.currentPiece.shape.map(r => [...r]) };
     while (!this._collides(ghost, 0, 1)) ghost.y++;
     return ghost;
   }
-
-  /* ── Lock & Line Detection ──────────────── */
 
   _lock() {
     const { shape, x, y } = this.currentPiece;
@@ -1481,13 +1747,13 @@ class TetrisGame {
         if (ny < 0) {
           this.gameOver = true;
           if (window.sound) window.sound.playGameOver();
+          if (window.onTrexGameOver) window.onTrexGameOver();
           return;
         }
         this.board[ny][x + px] = pieceData;
       }
     }
 
-    // Check full lines
     const fullRows = [];
     for (let row = 0; row < BOARD_HEIGHT; row++) {
       if (this.board[row].every(cell => cell !== null)) {
@@ -1500,7 +1766,6 @@ class TetrisGame {
       this.clearStartTime = performance.now();
       this.isClearing = true;
 
-      // Combo handling
       this.combo++;
       const names = { 1: 'SINGLE', 2: 'DOUBLE', 3: 'TRIPLE', 4: 'TETRIS' };
       this.lastAction = {
@@ -1510,8 +1775,12 @@ class TetrisGame {
       };
 
       if (window.sound) window.sound.playClear(fullRows.length);
+      // Trigger T-Rex celebration & dialogue!
+      if (window.onTrexCheer) {
+        window.onTrexCheer({ lines: fullRows.length, combo: this.combo });
+      }
     } else {
-      this.combo = -1; // reset combo if no line cleared
+      this.combo = -1;
       this.lastAction = null;
       if (window.sound) window.sound.playDrop();
       this._spawnPiece();
@@ -1522,7 +1791,6 @@ class TetrisGame {
     if (!this.isClearing) return;
     const cleared = this.clearingLines.length;
 
-    // Remove the full lines from bottom to top
     this.clearingLines.sort((a, b) => b - a).forEach(row => {
       this.board.splice(row, 1);
       this.board.unshift(Array(BOARD_WIDTH).fill(null));
@@ -1541,8 +1809,6 @@ class TetrisGame {
     this.isClearing = false;
     this._spawnPiece();
   }
-
-  /* ── Tick ───────────────────────────────── */
 
   tick(now = performance.now()) {
     if (this.gameOver || this.paused) return;
@@ -1563,9 +1829,12 @@ class TetrisGame {
 }
 
 
+/* ====================================================
+   APPLICATION CONTROLLER & MASCOT COMPANION
+   ==================================================== */
 /* =============================================
-   app.js — Complete Arcade Studio Controller
-   with Direct Supabase REST & SDK Integration
+   app.js — 16-Bit Pixel RPG Controller
+   feat. Red T-Rex Companion & Mobile Controls
    ============================================= */
 
 const CELL_SIZE = 30; // 10 cols x 30 = 300px, 20 rows x 30 = 600px
@@ -1578,13 +1847,14 @@ let lastDropTime   = 0;
 let currentScreen  = 'start';
 let prevScreen     = 'start';
 let particles      = [];
+let selectedRating = 5;
 
 // Screen Shake FX
-let shakeDuration = 0;
+let shakeDuration  = 0;
 let shakeMagnitude = 0;
 let shakeStartTime = 0;
 
-function triggerShake(magnitude = 5, duration = 150) {
+function triggerShake(magnitude = 4, duration = 140) {
   shakeMagnitude = magnitude;
   shakeDuration  = duration;
   shakeStartTime = performance.now();
@@ -1657,6 +1927,7 @@ function openLeaderboard() {
 
 function openFeedback() {
   showScreen('feedback');
+  initStarRating();
 }
 
 function quitGame() {
@@ -1667,9 +1938,9 @@ function quitGame() {
 function toggleMute() {
   if (window.sound) {
     const isMuted = window.sound.toggleMute();
-    const btn = getElement('btn-mute');
-    if (btn) {
-      btn.innerHTML = isMuted ? '<span>🔇</span><span>เสียงปิด (M)</span>' : '<span>🔊</span><span>เสียงเปิด (M)</span>';
+    const label = getElement('mute-label');
+    if (label) {
+      label.textContent = isMuted ? '🔇 ปิดเสียง' : '🔊 เปิดเสียง';
     }
   }
 }
@@ -1687,17 +1958,108 @@ function showActionBanner(text) {
   }, 1000);
 }
 
+// ── T-Rex Interactive Companion System ───────
+const TREX_QUOTES = {
+  cheerSingle: [
+    "สวยพี่สวย! +100",
+    "สเต็ปนี้ได้เรื่องว่ะ!",
+    "มือสั้นแต่แต้มยาวนะ!",
+    "ไปต่อวัยรุ่น อย่าแผ่ว!"
+  ],
+  cheerMulti: [
+    "สองแถวติด! ป๋าชอบบ!",
+    "สามแถวรวด! โหดจัด!",
+    "คอมโบไฟลุกแล้วเจ้าหนู!"
+  ],
+  cheerTetris: [
+    "โฮกกกรร! TETRIS แตก!! 🦖🔥",
+    "4 แถวรวด! ป๋าคารวะเลย!",
+    "สุดจริงตัวตึงแห่งยุคจูราสสิก!"
+  ],
+  poke: [
+    "อย่าจิ้มเยอะ เดี๋ยวแว่นป๋าเบี้ยว!",
+    "มองกระดานสิ มองหน้าป๋าทำไม!",
+    "จิ้มแล้วแต้มไม่เพิ่มนะบอกก่อน 555",
+    "มือป๋าสั้น แต่วางบล็อกแม่นนะ!",
+    "สู้เขาสิวะ เจ้ามนุษย์!"
+  ],
+  gameOver: [
+    "ไดโนเสาร์ยังสูญพันธุ์ได้ นายเริ่มใหม่ได้เสมอ!",
+    "มือสั่นเหรอวัยรุ่น? มาอีกรอบดิ๊!",
+    "ป๋ายังเชื่อในตัวนายนะ ลุยต่อเลย!"
+  ]
+};
+
+let rexCheerTimer = null;
+
+function setTrexPose(poseName, quoteText = null) {
+  const spriteWrap = getElement('companion-svg-wrap');
+  const speech = getElement('companion-speech');
+  if (!spriteWrap) return;
+
+  const svgUse = poseName === 'cheer' ? '#icon-trex-cheer' : '#icon-trex-idle';
+  spriteWrap.innerHTML = `<svg viewBox="0 0 40 40"><use href="${svgUse}"/></svg>`;
+
+  if (poseName === 'cheer') {
+    spriteWrap.classList.add('cheering');
+  } else {
+    spriteWrap.classList.remove('cheering');
+  }
+
+  if (speech && quoteText) {
+    speech.textContent = quoteText;
+  }
+}
+
+window.onTrexCheer = function({ lines, combo }) {
+  let quote = "";
+  if (lines === 4) {
+    quote = TREX_QUOTES.cheerTetris[Math.floor(Math.random() * TREX_QUOTES.cheerTetris.length)];
+  } else if (combo > 1) {
+    quote = `คอมโบ x${combo}! ไฟลุกแล้ว! 🔥`;
+  } else if (lines > 1) {
+    quote = TREX_QUOTES.cheerMulti[Math.floor(Math.random() * TREX_QUOTES.cheerMulti.length)];
+  } else {
+    quote = TREX_QUOTES.cheerSingle[Math.floor(Math.random() * TREX_QUOTES.cheerSingle.length)];
+  }
+
+  setTrexPose('cheer', quote);
+
+  clearTimeout(rexCheerTimer);
+  rexCheerTimer = setTimeout(() => {
+    setTrexPose('idle', "สู้ๆ วัยรุ่น!");
+  }, 2400);
+};
+
+window.onTrexGameOver = function() {
+  const quote = TREX_QUOTES.gameOver[Math.floor(Math.random() * TREX_QUOTES.gameOver.length)];
+  const gameoverSpeech = getElement('gameover-trex-quote');
+  if (gameoverSpeech) {
+    gameoverSpeech.textContent = `"${quote}"`;
+  }
+};
+
+window.pokeTrex = function() {
+  const quote = TREX_QUOTES.poke[Math.floor(Math.random() * TREX_QUOTES.poke.length)];
+  setTrexPose('cheer', quote);
+  clearTimeout(rexCheerTimer);
+  rexCheerTimer = setTimeout(() => {
+    setTrexPose('idle', "สู้ๆ วัยรุ่น!");
+  }, 2000);
+};
+
 // ── Particle System for Line Clear FX ────────
 function spawnLineParticles(row) {
   const y = row * CELL_SIZE + CELL_SIZE / 2;
-  for (let i = 0; i < 28; i++) {
+  const pigments = ['#EF5350', '#FFCA28', '#29B6F6', '#66BB6A', '#FFF'];
+  for (let i = 0; i < 24; i++) {
     particles.push({
       x: Math.random() * (BOARD_WIDTH * CELL_SIZE),
       y: y + (Math.random() * 12 - 6),
-      vx: (Math.random() - 0.5) * 7,
-      vy: (Math.random() - 0.5) * 6,
-      radius: Math.random() * 3 + 1.5,
-      color: ['#FFFFFF', '#FEF08A', '#67E8F9', '#F472B6', '#38BDF8'][Math.floor(Math.random() * 5)],
+      vx: (Math.random() - 0.5) * 8,
+      vy: (Math.random() - 0.5) * 7,
+      size: Math.random() * 6 + 3,
+      color: pigments[Math.floor(Math.random() * pigments.length)],
       alpha: 1
     });
   }
@@ -1708,7 +2070,7 @@ function updateAndDrawParticles(ctx) {
     const p = particles[i];
     p.x += p.vx;
     p.y += p.vy;
-    p.alpha -= 0.035;
+    p.alpha -= 0.04;
     if (p.alpha <= 0) {
       particles.splice(i, 1);
       continue;
@@ -1716,21 +2078,18 @@ function updateAndDrawParticles(ctx) {
     ctx.save();
     ctx.globalAlpha = Math.max(0, p.alpha);
     ctx.fillStyle = p.color;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.fillRect(Math.floor(p.x), Math.floor(p.y), Math.floor(p.size), Math.floor(p.size));
     ctx.restore();
   }
 }
 
-// ── 3D Stylized Block Drawing ────────────────
+// ── 16-Bit Pixel Block Drawing ───────────────
 function drawStyledBlock(ctx, x, y, size, colorData, alpha = 1) {
   if (!ctx) return;
-  const pad = 1.2;
-  const bx = x * size + pad;
-  const by = y * size + pad;
-  const bw = size - pad * 2;
-  const bh = size - pad * 2;
+  const bx = Math.floor(x * size);
+  const by = Math.floor(y * size);
+  const bw = size;
+  const bh = size;
 
   const baseColor  = typeof colorData === 'object' ? colorData.color : colorData;
   const lightColor = typeof colorData === 'object' && colorData.light ? colorData.light : baseColor;
@@ -1739,46 +2098,27 @@ function drawStyledBlock(ctx, x, y, size, colorData, alpha = 1) {
   ctx.save();
   ctx.globalAlpha = alpha;
 
+  // Outer Crisp Pixel Border
+  ctx.fillStyle = '#1A1423';
+  ctx.fillRect(bx, by, bw, bh);
+
+  // Main Block Body (inset 1px)
   ctx.fillStyle = baseColor;
-  if (typeof ctx.roundRect === 'function') {
-    ctx.beginPath();
-    ctx.roundRect(bx, by, bw, bh, 4);
-    ctx.fill();
-  } else {
-    ctx.fillRect(bx, by, bw, bh);
-  }
+  ctx.fillRect(bx + 1, by + 1, bw - 2, bh - 2);
 
-  // Top/Left Highlight Bevel
+  // Top & Left Pixel Highlight (2px)
   ctx.fillStyle = lightColor;
-  ctx.globalAlpha = alpha * 0.55;
-  ctx.beginPath();
-  ctx.moveTo(bx, by);
-  ctx.lineTo(bx + bw, by);
-  ctx.lineTo(bx + bw - 3.5, by + 3.5);
-  ctx.lineTo(bx + 3.5, by + 3.5);
-  ctx.lineTo(bx + 3.5, by + bh - 3.5);
-  ctx.lineTo(bx, by + bh);
-  ctx.closePath();
-  ctx.fill();
+  ctx.fillRect(bx + 1, by + 1, bw - 2, 3);
+  ctx.fillRect(bx + 1, by + 1, 3, bh - 2);
 
-  // Bottom/Right Dark Shadow Bevel
+  // Bottom & Right Pixel Shadow (3px)
   ctx.fillStyle = darkColor;
-  ctx.globalAlpha = alpha * 0.45;
-  ctx.beginPath();
-  ctx.moveTo(bx + bw, by);
-  ctx.lineTo(bx + bw, by + bh);
-  ctx.lineTo(bx, by + bh);
-  ctx.lineTo(bx + 3.5, by + bh - 3.5);
-  ctx.lineTo(bx + bw - 3.5, by + bh - 3.5);
-  ctx.lineTo(bx + bw - 3.5, by + 3.5);
-  ctx.closePath();
-  ctx.fill();
+  ctx.fillRect(bx + 1, by + bh - 3, bw - 2, 2);
+  ctx.fillRect(bx + bw - 3, by + 1, 2, bh - 2);
 
-  // Inner subtle border
-  ctx.strokeStyle = '#ffffff';
-  ctx.globalAlpha = alpha * 0.22;
-  ctx.lineWidth = 1;
-  ctx.strokeRect(bx + 3, by + 3, bw - 6, bh - 6);
+  // Specular Pixel Glint at top-left
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(bx + 3, by + 3, 2, 2);
 
   ctx.restore();
 }
@@ -1794,11 +2134,13 @@ function drawBoard(now) {
   const shake = getShakeOffset(now);
   ctx.translate(shake.x, shake.y);
 
-  ctx.clearRect(-10, -10, canvas.width + 20, canvas.height + 20);
+  // Dark Retro Arcade Playfield
+  ctx.fillStyle = '#120D1A';
+  ctx.fillRect(-10, -10, canvas.width + 20, canvas.height + 20);
 
-  // Grid Lines
+  // Subtle Pixel Grid Lines
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-  ctx.lineWidth   = 0.5;
+  ctx.lineWidth   = 1;
   for (let y = 0; y < BOARD_HEIGHT; y++) {
     for (let x = 0; x < BOARD_WIDTH; x++) {
       ctx.strokeRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
@@ -1814,16 +2156,13 @@ function drawBoard(now) {
         if (isClearingRow) {
           const progress = Math.min(1, (now - game.clearStartTime) / game.clearDuration);
           const flashAlpha = Math.sin(progress * Math.PI);
-          const scale = 1 - progress * 0.25;
 
           ctx.save();
-          ctx.translate((x + 0.5) * CELL_SIZE, (y + 0.5) * CELL_SIZE);
-          ctx.scale(scale, scale);
-          drawStyledBlock(ctx, -0.5, -0.5, CELL_SIZE, cell, 1 - progress * 0.6);
+          drawStyledBlock(ctx, x, y, CELL_SIZE, cell, 1 - progress * 0.5);
 
-          ctx.fillStyle = '#FFFFFF';
+          ctx.fillStyle = '#FFE066';
           ctx.globalAlpha = flashAlpha * 0.95;
-          ctx.fillRect(-CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
+          ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
           ctx.restore();
         } else {
           drawStyledBlock(ctx, x, y, CELL_SIZE, cell, 1);
@@ -1832,7 +2171,7 @@ function drawBoard(now) {
     }
   }
 
-  // Ghost Piece (Shadow)
+  // Ghost Piece (Dotted Pixel Frame)
   if (!game.isClearing) {
     try {
       const ghost = game.getGhostPiece();
@@ -1843,13 +2182,14 @@ function drawBoard(now) {
               const gx = ghost.x + px;
               const gy = ghost.y + py;
               ctx.save();
-              ctx.strokeStyle = ghost.color;
-              ctx.lineWidth = 1.5;
-              ctx.globalAlpha = 0.5;
-              ctx.strokeRect(gx * CELL_SIZE + 2, gy * CELL_SIZE + 2, CELL_SIZE - 4, CELL_SIZE - 4);
               ctx.fillStyle = ghost.color;
-              ctx.globalAlpha = 0.12;
+              ctx.globalAlpha = 0.22;
               ctx.fillRect(gx * CELL_SIZE + 2, gy * CELL_SIZE + 2, CELL_SIZE - 4, CELL_SIZE - 4);
+              ctx.strokeStyle = ghost.light || '#FFF';
+              ctx.lineWidth = 1.5;
+              ctx.setLineDash([3, 3]);
+              ctx.globalAlpha = 0.7;
+              ctx.strokeRect(gx * CELL_SIZE + 2, gy * CELL_SIZE + 2, CELL_SIZE - 4, CELL_SIZE - 4);
               ctx.restore();
             }
           }
@@ -1870,7 +2210,7 @@ function drawBoard(now) {
     }
   }
 
-  // Draw Line Clear Sparks & Particles
+  // Line Clear Sparks & Particles
   updateAndDrawParticles(ctx);
 
   ctx.restore();
@@ -1887,7 +2227,7 @@ function renderPiecePreview(canvasId, piece, disabled = false) {
   if (!piece) return;
 
   const { shape, color, light, dark } = piece;
-  const cs = 20;
+  const cs = 15;
   const offX = Math.floor((canvas.width  / cs - shape[0].length) / 2);
   const offY = Math.floor((canvas.height / cs - shape.length)    / 2);
 
@@ -1907,17 +2247,11 @@ function updateStats() {
   const elLines = getElement('display-lines');
   const elHi    = getElement('display-high-score');
   const elCombo = getElement('display-combo');
-  const elProg  = getElement('level-progress-bar');
 
   if (elScore) elScore.textContent = game.score.toLocaleString();
   if (elLevel) elLevel.textContent = game.level;
   if (elLines) elLines.textContent = game.lines;
   if (elCombo) elCombo.textContent = game.combo > 0 ? `x${game.combo}` : '0';
-
-  if (elProg) {
-    const percent = (game.lines % 10) * 10;
-    elProg.style.width = `${percent}%`;
-  }
 
   const hi = parseInt(getSafeStorage('tetris-hi', '0')) || 0;
   if (elHi) elHi.textContent = hi.toLocaleString();
@@ -1938,11 +2272,11 @@ function startLoop() {
     if (game.isClearing) {
       if (particles.length === 0 && game.clearingLines.length > 0) {
         game.clearingLines.forEach(row => spawnLineParticles(row));
-        triggerShake(game.clearingLines.length >= 4 ? 9 : 4, 200);
+        triggerShake(game.clearingLines.length >= 4 ? 8 : 4, 180);
 
         if (game.lastAction) {
-          const tag = game.lastAction.lines === 4 ? '🌟 TETRIS!' : `${game.lastAction.type}!`;
-          const comboText = game.lastAction.combo > 0 ? ` (COMBO x${game.lastAction.combo})` : '';
+          const tag = game.lastAction.lines === 4 ? '🦖 TETRIS!!' : `${game.lastAction.type}!`;
+          const comboText = game.lastAction.combo > 0 ? ` x${game.lastAction.combo}` : '';
           showActionBanner(tag + comboText);
         }
       }
@@ -1998,14 +2332,13 @@ async function onGameOver() {
 
   const cfg = getSupabaseConfig();
   if (!cfg) {
-    if (saveSt) saveSt.textContent = '(เล่นในโหมดออฟไลน์ — ไม่ได้เชื่อมต่อ Supabase)';
+    if (saveSt) saveSt.textContent = '(เล่นในโหมดออฟไลน์ — ไม่ได้เชื่อมต่อฐานข้อมูล)';
     return;
   }
 
   if (saveSt) saveSt.textContent = 'กำลังบันทึกคะแนนสู่ Leaderboard...';
 
   try {
-    // Direct REST API Post
     await fetch(`${cfg.url}/rest/v1/scores`, {
       method: 'POST',
       headers: {
@@ -2017,7 +2350,6 @@ async function onGameOver() {
       body: JSON.stringify([{ player_name: playerName, score, level, lines }])
     });
 
-    // Query rank count
     const countRes = await fetch(`${cfg.url}/rest/v1/scores?select=id&score=gt.${score}`, {
       headers: {
         'apikey': cfg.key,
@@ -2031,10 +2363,10 @@ async function onGameOver() {
     const totalAbove = contentRange ? parseInt(contentRange.split('/')[1] || '0') : 0;
 
     if (resRank) resRank.textContent = `#${totalAbove + 1}`;
-    if (saveSt)  saveSt.textContent  = '✓ บันทึกคะแนนขึ้นอันดับโลกสำเร็จ!';
+    if (saveSt)  saveSt.textContent  = '✓ บันทึกคะแนนขึ้นตารางอันดับสำเร็จ!';
   } catch (err) {
     console.error('Save score error:', err);
-    if (saveSt) saveSt.textContent = 'บันทึกคะแนนไม่สำเร็จ';
+    if (saveSt) saveSt.textContent = 'บันทึกคะแนนไม่สำเร็จ กรุณาลองใหม่';
   }
 }
 
@@ -2057,13 +2389,13 @@ function startGame() {
   let name = input ? input.value.trim() : '';
 
   if (!name) {
-    name = 'Pilot ' + Math.floor(100 + Math.random() * 900);
+    name = 'Player ' + Math.floor(100 + Math.random() * 900);
     if (input) input.value = name;
   }
 
   playerName = name;
   const displayName = getElement('display-player-name');
-  if (displayName) displayName.textContent = `PILOT: ${name}`;
+  if (displayName) displayName.textContent = `PLAYER: ${name}`;
   const feedbackName = getElement('feedback-name');
   if (feedbackName) feedbackName.value = name;
 
@@ -2078,6 +2410,7 @@ function startGame() {
   const overlay = getElement('pause-overlay');
   if (overlay) overlay.classList.add('hidden');
 
+  setTrexPose('idle', "สู้ๆ วัยรุ่น!");
   showScreen('game');
   startLoop();
 }
@@ -2089,11 +2422,11 @@ async function loadLeaderboard() {
 
   const cfg = getSupabaseConfig();
   if (!cfg) {
-    list.innerHTML = '<div class="empty-state">ยังไม่ได้เชื่อมต่อ Supabase<br><small style="color:#aaa;">(สามารถใส่ URL และ Key ในไฟล์ config.js)</small></div>';
+    list.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--px-text-muted);">ยังไม่ได้เชื่อมต่อ Supabase<br><small>(ตั้งค่า URL และ Key ในไฟล์ config.js)</small></div>';
     return;
   }
 
-  list.innerHTML = '<div class="loading">กำลังเชื่อมต่อตารางอันดับ...</div>';
+  list.innerHTML = '<div class="loading" style="padding: 24px; text-align: center; color: var(--px-text-muted);">กำลังดึงข้อมูลตารางอันดับ...</div>';
 
   try {
     const res = await fetch(`${cfg.url}/rest/v1/scores?select=player_name,score,level,lines&order=score.desc&limit=20`, {
@@ -2110,21 +2443,23 @@ async function loadLeaderboard() {
     const data = await res.json();
 
     if (!data || data.length === 0) {
-      list.innerHTML = '<div class="empty-state">ยังไม่มีผู้ติดอันดับในเซิร์ฟเวอร์<br>มาเป็นคนแรกกันเถอะ! 🏆</div>';
+      list.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--px-text-muted);">ยังไม่มีผู้ติดอันดับ<br>มาเป็นคนแรกกันเถอะ! 🏆</div>';
       return;
     }
 
-    const medals = ['🥇', '🥈', '🥉'];
-    list.innerHTML = data.map((row, i) => `
-      <div class="leaderboard-row ${row.player_name === playerName ? 'highlight' : ''}">
-        <span class="rank ${i < 3 ? 'top' : ''}">${medals[i] || (i + 1)}</span>
-        <span class="lb-name">${escapeHtml(row.player_name)}</span>
-        <span class="lb-score">${(row.score || 0).toLocaleString()}</span>
-      </div>
-    `).join('');
+    list.innerHTML = data.map((row, i) => {
+      const rankNum = String(i + 1).padStart(2, '0');
+      return `
+        <div class="leaderboard-row ${row.player_name === playerName ? 'highlight' : ''}">
+          <span class="rank ${i < 3 ? 'top' : ''}">#${rankNum}</span>
+          <span class="lb-name">${escapeHtml(row.player_name)}</span>
+          <span class="lb-score">${(row.score || 0).toLocaleString()}</span>
+        </div>
+      `;
+    }).join('');
   } catch (err) {
     console.error('Leaderboard error:', err);
-    list.innerHTML = '<div class="empty-state">โหลดอันดับไม่สำเร็จ กรุณาลองใหม่อีกครั้ง</div>';
+    list.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--px-text-muted);">โหลดอันดับไม่สำเร็จ กรุณาลองใหม่อีกครั้ง</div>';
   }
 }
 
@@ -2133,16 +2468,63 @@ function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ── Feedback (Direct REST) ────────────────────
+// ── Star Rating Feedback System ──────────────
+const STAR_HINTS = {
+  1: "⭐ ปรับปรุงอีกนิดนะ",
+  2: "⭐⭐ พอเล่นได้เรื่อยๆ",
+  3: "⭐⭐⭐ สนุกดีใช้ได้เลย",
+  4: "⭐⭐⭐⭐ สนุกมาก ชอบเลย!",
+  5: "⭐⭐⭐⭐⭐ สุดยอด! เพลินจัด 🦖🔥"
+};
+
+function initStarRating() {
+  const container = getElement('star-group');
+  const hint = getElement('star-hint');
+  if (!container) return;
+
+  const buttons = container.querySelectorAll('.star-btn');
+  updateStarVisuals(selectedRating);
+
+  buttons.forEach(btn => {
+    btn.onclick = () => {
+      selectedRating = parseInt(btn.dataset.val);
+      updateStarVisuals(selectedRating);
+      if (hint) hint.textContent = STAR_HINTS[selectedRating] || "";
+    };
+
+    btn.onmouseenter = () => {
+      const hoverVal = parseInt(btn.dataset.val);
+      buttons.forEach(b => {
+        b.classList.toggle('hovered', parseInt(b.dataset.val) <= hoverVal);
+      });
+      if (hint) hint.textContent = STAR_HINTS[hoverVal] || "";
+    };
+
+    btn.onmouseleave = () => {
+      buttons.forEach(b => b.classList.remove('hovered'));
+      if (hint) hint.textContent = STAR_HINTS[selectedRating] || "กดเลือกดาวเพื่อประเมิน";
+    };
+  });
+}
+
+function updateStarVisuals(rating) {
+  const container = getElement('star-group');
+  if (!container) return;
+  const buttons = container.querySelectorAll('.star-btn');
+  buttons.forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.val) <= rating);
+  });
+}
+
+// ── Feedback Submit ───────────────────────────
 async function submitFeedback() {
   const nameEl    = getElement('feedback-name');
   const msgEl     = getElement('feedback-message');
   const statusEl  = getElement('feedback-status');
-  const ratingBtn = document.querySelector('.rating-btn.selected');
 
   const name    = (nameEl ? nameEl.value.trim() : '') || playerName || 'ไม่ระบุ';
   const message = msgEl ? msgEl.value.trim() : '';
-  const rating  = ratingBtn ? parseInt(ratingBtn.dataset.rating) : null;
+  const rating  = selectedRating;
 
   if (!message) {
     if (statusEl) statusEl.textContent = 'กรุณาพิมพ์ข้อความความคิดเห็นก่อนส่ง';
@@ -2151,7 +2533,7 @@ async function submitFeedback() {
 
   const cfg = getSupabaseConfig();
   if (!cfg) {
-    if (statusEl) statusEl.textContent = '✓ ขอบคุณสำหรับความคิดเห็น! (โหมดออฟไลน์)';
+    if (statusEl) statusEl.textContent = '✓ ขอบคุณสำหรับความคิดเห็น (โหมดออฟไลน์)';
     if (msgEl) msgEl.value = '';
     return;
   }
@@ -2174,15 +2556,84 @@ async function submitFeedback() {
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    if (statusEl) statusEl.textContent = '✓ ขอบคุณสำหรับ Feedback มากครับ!';
+    if (statusEl) statusEl.textContent = '✓ ขอบคุณสำหรับ Feedback และคะแนนดาวมากครับ! 🦖⭐';
     if (msgEl) msgEl.value = '';
-    document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
   } catch (e) {
     console.error('Feedback error:', e);
-    if (statusEl) statusEl.textContent = 'ส่งความคิดเห็นไม่สำเร็จ กรุณาลองใหม่';
+    if (statusEl) statusEl.textContent = 'ส่งความคิดเห็นไม่สำเร็จ กรุณาลองใหม่อีกครั้ง';
   }
 
   if (btn) btn.disabled = false;
+}
+
+// ── Mobile Touch Controls Binding ────────────
+function setupMobileControls() {
+  const bindTouch = (id, action) => {
+    const el = getElement(id);
+    if (!el) return;
+
+    let repeatTimer = null;
+    let repeatInterval = null;
+
+    const start = (e) => {
+      e.preventDefault();
+      if (currentScreen !== 'game' || !game || game.gameOver || game.paused) return;
+      el.classList.add('active');
+      action();
+
+      repeatTimer = setTimeout(() => {
+        repeatInterval = setInterval(() => {
+          if (!game || game.gameOver || game.paused) return;
+          action();
+        }, 65);
+      }, 160);
+    };
+
+    const stop = (e) => {
+      el.classList.remove('active');
+      clearTimeout(repeatTimer);
+      clearInterval(repeatInterval);
+    };
+
+    el.addEventListener('touchstart', start, { passive: false });
+    el.addEventListener('touchend', stop);
+    el.addEventListener('touchcancel', stop);
+    el.addEventListener('mousedown', start);
+    el.addEventListener('mouseup', stop);
+    el.addEventListener('mouseleave', stop);
+  };
+
+  bindTouch('btn-touch-left', () => game && game.moveLeft());
+  bindTouch('btn-touch-right', () => game && game.moveRight());
+  bindTouch('btn-touch-down', () => {
+    if (game) {
+      game.moveDown();
+      lastDropTime = performance.now();
+    }
+  });
+
+  const bindSingleTouch = (id, action) => {
+    const el = getElement(id);
+    if (!el) return;
+    const trigger = (e) => {
+      e.preventDefault();
+      if (currentScreen !== 'game' || !game || game.gameOver || game.paused) return;
+      action();
+    };
+    el.addEventListener('touchstart', trigger, { passive: false });
+    el.addEventListener('mousedown', trigger);
+  };
+
+  bindSingleTouch('btn-touch-up', () => game && game.rotatePiece());
+  bindSingleTouch('btn-touch-rot', () => game && game.rotatePiece());
+  bindSingleTouch('btn-touch-hold', () => game && game.hold());
+  bindSingleTouch('btn-touch-drop', () => {
+    if (game) {
+      const dropDist = game.hardDrop();
+      if (dropDist > 0) triggerShake(4, 120);
+      lastDropTime = performance.now();
+    }
+  });
 }
 
 // ── Keyboard Controls & DAS ───────────────────
@@ -2294,12 +2745,10 @@ window.openFeedback    = openFeedback;
 window.goBack          = goBack;
 window.submitFeedback  = submitFeedback;
 
-// ── Rating Stars Click ───────────────────────
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.rating-btn');
-  if (!btn) return;
-  document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
+// ── Initialization on Load ────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  setupMobileControls();
+  initStarRating();
 });
 
 </script>
