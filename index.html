@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>TETRIS — 16-Bit Pixel RPG feat. Cool Red T-Rex</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='bg' cx='45%25' cy='35%25' r='55%25'%3E%3Cstop offset='0%25' stop-color='%23FF5252'/%3E%3Cstop offset='70%25' stop-color='%23C62828'/%3E%3Cstop offset='100%25' stop-color='%238E0000'/%3E%3C/radialGradient%3E%3CradialGradient id='lens' cx='30%25' cy='30%25' r='60%25'%3E%3Cstop offset='0%25' stop-color='%232C3440'/%3E%3Cstop offset='100%25' stop-color='%230B0F14'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='29' fill='url(%23bg)' stroke='%2335180B' stroke-width='4'/%3E%3C!-- Cream Jaw --%3E%3Cpath d='M18 36 C22 46, 42 46, 46 36 C42 43, 22 43, 18 36 Z' fill='%23FFE0B2'/%3E%3C!-- Crown on Head --%3E%3Cpolygon points='24,14 27,8 32,13 37,8 40,14 36,17 28,17' fill='%23FBB034' stroke='%2335180B' stroke-width='1.5'/%3E%3C!-- Cool Sunglasses --%3E%3Crect x='15' y='21' width='15' height='11' rx='3' fill='url(%23lens)' stroke='%23111' stroke-width='2'/%3E%3Crect x='34' y='21' width='15' height='11' rx='3' fill='url(%23lens)' stroke='%23111' stroke-width='2'/%3E%3Cline x1='29' y1='25' x2='35' y2='25' stroke='%23111' stroke-width='3' stroke-linecap='round'/%3E%3Cpolygon points='17,23 23,23 19,30 17,30' fill='%2381D4FA' opacity='0.75'/%3E%3Cpolygon points='36,23 42,23 38,30 36,30' fill='%2381D4FA' opacity='0.75'/%3E%3Ccircle cx='17' cy='23' r='0.8' fill='%23FFF'/%3E%3Ccircle cx='47' cy='23' r='0.8' fill='%23FFF'/%3E%3C!-- Smug Grin with Teef --%3E%3Cpath d='M22 38 Q32 46 42 38' stroke='%2335180B' stroke-width='2.6' fill='none' stroke-linecap='round'/%3E%3Cpolygon points='26,38 28,42 30,38' fill='%23FFF'/%3E%3Cpolygon points='34,39 36,43 38,39' fill='%23FFF'/%3E%3C/svg%3E">
+  <title>🦖 TETRIS Pro — Red T-Rex Arcade</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@500;600;700;800&family=Pixelify+Sans:wght@500;600;700;800&family=VT323&display=swap" rel="stylesheet">
@@ -43,7 +44,7 @@
 }
 
 html, body {
-  height: 100%;
+  min-height: 100%;
   overflow-x: hidden;
   image-rendering: pixelated;
 }
@@ -53,7 +54,7 @@ body {
   background-color: var(--px-bg);
   color: var(--px-text);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   min-height: 100vh;
   position: relative;
@@ -221,57 +222,177 @@ body {
   box-shadow: 0 1px 0px #1E0C04;
 }
 
-/* ─── START SCREEN (T-Rex Hero) ────────────── */
+/* ─── START SCREEN (3D T-Rex Hero & Controls) ── */
 
 .start-sheet {
   width: 100%;
-  max-width: 440px;
+  max-width: 480px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+  position: relative;
+}
+
+/* ─── TOP 3 LEADERBOARD WIDGET (Start Screen Top-Right) ─── */
+.top3-floating-card {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  width: 230px;
+  padding: 10px 12px;
+  background-color: var(--px-panel);
+  border: 3px solid var(--px-border);
+  box-shadow: 
+    inset -3px -3px 0px var(--px-wood-dark),
+    inset 3px 3px 0px #D7995E,
+    0 6px 0px rgba(0, 0, 0, 0.45);
+  z-index: 25;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.top3-floating-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    inset -3px -3px 0px var(--px-wood-dark),
+    inset 3px 3px 0px #D7995E,
+    0 8px 0px rgba(0, 0, 0, 0.5);
+}
+
+.top3-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 6px;
+  border-bottom: 2px dashed rgba(53, 24, 11, 0.25);
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--px-border);
+  letter-spacing: 0.5px;
+}
+
+.top3-crown {
+  font-size: 16px;
+  filter: drop-shadow(0 2px 0px rgba(0,0,0,0.2));
+}
+
+.top3-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.top3-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  background-color: #FFFFFF;
+  border: 2px solid var(--px-border);
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.top3-item.rank-1 {
+  background-color: #FFF9C4;
+  border-color: #D4AF37;
+}
+
+.top3-item .medal {
+  font-size: 13px;
+  width: 18px;
+}
+
+.top3-item .t3-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 4px;
+  color: var(--px-text);
+}
+
+.top3-item .t3-score {
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  color: var(--px-wood-dark);
+  font-weight: 900;
+}
+
+.trex-hero-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .trex-hero-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 10px 0 4px;
+  gap: 14px;
+  padding: 6px 0 2px;
   position: relative;
 }
 
-.trex-mascot-box {
-  width: 110px;
-  height: 120px;
+.trex-mascot-stage {
+  width: 154px;
+  height: 154px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: pixelBounce 1.4s steps(2) infinite;
+  cursor: pointer;
+  image-rendering: auto;
+  position: relative;
+  user-select: none;
+  transition: transform 0.2s ease;
 }
 
-.trex-mascot-box svg {
+.trex-mascot-stage:hover {
+  transform: scale(1.05);
+}
+
+.trex-mascot-stage:active {
+  transform: scale(0.95);
+}
+
+.trex-mascot-stage svg,
+.companion-sprite svg,
+.gameover-rex-stage svg {
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 6px 0px rgba(0,0,0,0.4));
+  overflow: visible;
+  image-rendering: auto;
+  shape-rendering: geometricPrecision;
+}
+
+.gameover-rex-stage {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  cursor: pointer;
+  image-rendering: auto;
 }
 
 .pixel-speech-bubble {
   background-color: #FFFFFF;
   border: 3px solid var(--px-border);
   padding: 10px 14px;
-  border-radius: 4px;
+  border-radius: 6px;
   position: relative;
-  max-width: 200px;
-  box-shadow: 0 4px 0px rgba(0,0,0,0.3);
+  flex: 1;
+  max-width: 280px;
+  box-shadow: 0 4px 0px rgba(0,0,0,0.35);
 }
 
 .pixel-speech-bubble::before {
   content: '';
   position: absolute;
   left: -10px;
-  top: 50%;
-  transform: translateY(-50%);
-  border-width: 6px 10px 6px 0;
+  top: 36px;
+  border-width: 7px 10px 7px 0;
   border-style: solid;
   border-color: transparent var(--px-border) transparent transparent;
 }
@@ -280,16 +401,15 @@ body {
   content: '';
   position: absolute;
   left: -6px;
-  top: 50%;
-  transform: translateY(-50%);
-  border-width: 4px 7px 4px 0;
+  top: 38px;
+  border-width: 5px 7px 5px 0;
   border-style: solid;
   border-color: transparent #FFFFFF transparent transparent;
 }
 
 .bubble-title {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 900;
   color: var(--px-red);
   letter-spacing: 0.5px;
 }
@@ -298,32 +418,152 @@ body {
   font-size: 13px;
   font-weight: 700;
   color: var(--px-border);
-  line-height: 1.3;
-  margin-top: 2px;
+  line-height: 1.35;
+  margin-top: 3px;
+  min-height: 38px;
+}
+
+/* Audio & Music Control Bar */
+.audio-control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.btn-audio-pill {
+  background-color: var(--px-wood);
+  border: 2px solid var(--px-border);
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow:
+    inset -2px -2px 0px var(--px-wood-dark),
+    inset 2px 2px 0px #D7995E,
+    0 2px 0px #120905;
+  transition: transform 0.1s;
+}
+
+.btn-audio-pill:hover {
+  background-color: #B36530;
+}
+
+.btn-audio-pill:active {
+  transform: translateY(2px);
+  box-shadow: 0 0px 0px #120905;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-top-mini {
+  background-color: var(--px-panel);
+  border: 2px solid var(--px-border);
+  color: var(--px-border);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 3px;
+  cursor: pointer;
+  box-shadow: 0 2px 0px var(--px-border);
+}
+
+.btn-top-mini:hover {
+  background-color: var(--px-gold);
 }
 
 .poster-header {
   text-align: center;
-  padding: 8px 0;
+  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 
-.poster-header h1 {
-  font-size: 48px;
+.arcade-logo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(180deg, #2A173B 0%, #130B1C 100%);
+  border: 3px solid var(--px-gold);
+  padding: 6px 20px;
+  border-radius: 8px;
+  box-shadow: 
+    0 0 16px rgba(251, 176, 52, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 5px 0px var(--px-border);
+}
+
+.logo-dino-icon {
+  font-size: 32px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.arcade-logo-badge h1 {
+  font-size: 42px;
   font-weight: 900;
-  color: var(--px-gold);
-  letter-spacing: 2px;
+  color: var(--px-gold-bright);
+  letter-spacing: 3px;
+  line-height: 1;
   text-shadow: 
-    3px 3px 0px var(--px-wood-dark),
-    -2px -2px 0px #FFF,
-    4px 5px 0px var(--px-border);
+    2px 2px 0px #B86B14,
+    -1px -1px 0px #FFF,
+    3px 4px 0px var(--px-border);
+  margin: 0;
+}
+
+.logo-arcade-pill {
+  background-color: var(--px-red);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 3px 7px;
+  border-radius: 4px;
+  border: 1.5px solid var(--px-border);
+  letter-spacing: 1px;
 }
 
 .poster-sub {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--px-text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  color: #FFF3DB;
   letter-spacing: 1px;
-  margin-top: 2px;
+}
+
+.btn-home-big {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 800;
+  background-color: var(--px-panel);
+  color: var(--px-border);
+  border: 3px solid var(--px-border);
+  box-shadow: 
+    inset -2px -2px 0px var(--px-panel-dark),
+    inset 2px 2px 0px #FFF,
+    0 4px 0px rgba(0,0,0,0.35);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.btn-home-big:hover {
+  background-color: var(--px-gold-bright);
+}
+
+.btn-home-big:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0px rgba(0,0,0,0.35);
 }
 
 .name-form {
@@ -494,9 +734,11 @@ kbd {
 }
 
 .companion-sprite {
-  width: 68px;
-  height: 68px;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  width: 82px;
+  height: 82px;
+  image-rendering: auto;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .companion-sprite.cheering {
@@ -901,14 +1143,256 @@ kbd {
   font-weight: 700;
 }
 
-/* ─── Keyframe Animations ──────────────────── */
+/* ─── SMOOTH 3D RED T-REX RIG & MULTI-POSE ANIMATIONS ─── */
 
-@keyframes pixelBounce {
+.rex-whole {
+  transform-origin: 110px 185px;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rex-tail {
+  transform-origin: 72px 158px;
+}
+
+.rex-torso {
+  transform-origin: 110px 155px;
+}
+
+.rex-head {
+  transform-origin: 112px 102px;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rex-arm-l {
+  transform-origin: 116px 136px;
+  transition: transform 0.3s ease;
+}
+
+.rex-arm-r {
+  transform-origin: 142px 138px;
+  transition: transform 0.3s ease;
+}
+
+.rex-glasses {
+  transform-origin: 122px 62px;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rex-strings {
+  transform-origin: 126px 118px;
+}
+
+/* Eye & Mouth default visibility */
+.rex-mouth-smile { opacity: 1; transition: opacity 0.15s; }
+.rex-mouth-roar  { opacity: 0; transition: opacity 0.15s; }
+.rex-eye-open    { opacity: 1; transition: opacity 0.15s; }
+.rex-eye-wink    { opacity: 0; transition: opacity 0.15s; }
+
+/* Periodic Natural Eye Blink */
+.rex-eyelid {
+  transform-origin: 116px 76px;
+  animation: rexBlink 4.2s infinite;
+}
+
+/* Effect layers hidden by default */
+.fx-cool, .fx-dance, .fx-roar, .fx-wink {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+/* 1. POSE: COOL (เก๊กหล่อ) */
+.pose-cool .rex-whole {
+  animation: rexCoolBreathe 2.4s ease-in-out infinite;
+}
+.pose-cool .rex-head {
+  animation: rexCoolNod 2.4s ease-in-out infinite;
+}
+.pose-cool .rex-tail {
+  animation: rexTailWag 2.4s ease-in-out infinite;
+}
+.pose-cool .rex-arm-l {
+  animation: rexArmIdle 2.4s ease-in-out infinite;
+}
+.pose-cool .fx-cool {
+  opacity: 1;
+  animation: fxFloatPulse 2s ease-in-out infinite;
+}
+
+/* 2. POSE: DANCE (เต้นร็อคโยกจังหวะเพลง) */
+.pose-dance .rex-whole {
+  animation: rexDanceGroove 0.55s ease-in-out infinite alternate;
+}
+.pose-dance .rex-head {
+  animation: rexDanceHead 0.55s ease-in-out infinite alternate;
+}
+.pose-dance .rex-tail {
+  animation: rexTailWag 0.45s ease-in-out infinite;
+}
+.pose-dance .rex-arm-l {
+  animation: rexArmPumpL 0.35s ease-in-out infinite alternate;
+}
+.pose-dance .rex-arm-r {
+  animation: rexArmPumpR 0.35s ease-in-out infinite alternate;
+}
+.pose-dance .rex-strings {
+  animation: rexStringSway 0.55s ease-in-out infinite alternate;
+}
+.pose-dance .fx-dance {
+  opacity: 1;
+  animation: fxNotesBounce 1.1s ease-in-out infinite;
+}
+
+/* 3. POSE: ROAR (คำรามพ่นไฟกวนๆ) */
+.pose-roar .rex-whole {
+  animation: rexRoarBody 0.4s ease-in-out infinite alternate;
+}
+.pose-roar .rex-head {
+  animation: rexRoarHead 0.22s ease-in-out infinite alternate;
+}
+.pose-roar .rex-mouth-smile { opacity: 0; }
+.pose-roar .rex-mouth-roar  { opacity: 1; }
+.pose-roar .rex-arm-l {
+  transform: rotate(-38deg) translateY(-6px);
+}
+.pose-roar .rex-arm-r {
+  transform: rotate(-32deg) translateY(-5px);
+}
+.pose-roar .rex-tail {
+  animation: rexTailWag 0.3s ease-in-out infinite;
+}
+.pose-roar .fx-roar {
+  opacity: 1;
+  animation: fxRoarPulse 0.35s ease-in-out infinite alternate;
+}
+
+/* 4. POSE: WINK (ขยิบตากวนๆ หัวเราะ) */
+.pose-wink .rex-whole {
+  animation: rexWinkBounce 0.9s ease-in-out infinite;
+}
+.pose-wink .rex-head {
+  animation: rexWinkTilt 1.8s ease-in-out infinite;
+}
+.pose-wink .rex-eye-open { opacity: 0; }
+.pose-wink .rex-eye-wink { opacity: 1; }
+.pose-wink .rex-arm-l {
+  animation: rexArmWave 0.6s ease-in-out infinite alternate;
+}
+.pose-wink .rex-tail {
+  animation: rexTailWag 1.1s ease-in-out infinite;
+}
+.pose-wink .fx-wink {
+  opacity: 1;
+  animation: fxFloatPulse 1.4s ease-in-out infinite;
+}
+
+/* ─── Keyframes for 3D Articulated Dino ────── */
+
+@keyframes rexBlink {
+  0%, 92%, 100% { transform: scaleY(0); }
+  95%           { transform: scaleY(1); }
+}
+
+@keyframes rexCoolBreathe {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50%      { transform: translateY(-4px) scaleY(1.02); }
+}
+
+@keyframes rexCoolNod {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(3.5deg) translateY(2px); }
+}
+
+@keyframes rexTailWag {
+  0%, 100% { transform: rotate(-5deg); }
+  50%      { transform: rotate(9deg); }
+}
+
+@keyframes rexArmIdle {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(-12deg); }
+}
+
+@keyframes rexDanceGroove {
+  0%   { transform: translateY(0) rotate(-4deg) scale(1); }
+  100% { transform: translateY(-9px) rotate(4deg) scale(1.04, 0.97); }
+}
+
+@keyframes rexDanceHead {
+  0%   { transform: rotate(-6deg) translateY(2px); }
+  100% { transform: rotate(7deg) translateY(-3px); }
+}
+
+@keyframes rexArmPumpL {
+  0%   { transform: rotate(10deg); }
+  100% { transform: rotate(-42deg); }
+}
+
+@keyframes rexArmPumpR {
+  0%   { transform: rotate(-38deg); }
+  100% { transform: rotate(12deg); }
+}
+
+@keyframes rexStringSway {
+  0%   { transform: rotate(-8deg); }
+  100% { transform: rotate(10deg); }
+}
+
+@keyframes rexRoarBody {
+  0%   { transform: scale(1) translateY(0); }
+  100% { transform: scale(1.05) translateY(-4px); }
+}
+
+@keyframes rexRoarHead {
+  0%   { transform: rotate(-8deg) translate(-1px, -2px); }
+  100% { transform: rotate(-4deg) translate(2px, -4px); }
+}
+
+@keyframes rexWinkBounce {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
+  50%      { transform: translateY(-6px); }
+}
+
+@keyframes rexWinkTilt {
+  0%, 100% { transform: rotate(-4deg); }
+  50%      { transform: rotate(6deg); }
+}
+
+@keyframes rexArmWave {
+  0%   { transform: rotate(-10deg); }
+  100% { transform: rotate(-35deg); }
+}
+
+@keyframes fxFloatPulse {
+  0%, 100% { transform: translateY(0) scale(0.95); opacity: 0.85; }
+  50%      { transform: translateY(-6px) scale(1.08); opacity: 1; }
+}
+
+@keyframes fxNotesBounce {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50%      { transform: translateY(-10px) rotate(8deg); }
+}
+
+@keyframes fxRoarPulse {
+  0%   { transform: scale(0.94); opacity: 0.8; }
+  100% { transform: scale(1.1); opacity: 1; }
 }
 
 /* ─── Mobile Media Queries ─────────────────── */
+
+@media (max-width: 1040px) {
+  #screen-start {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 20px;
+  }
+  .top3-floating-card {
+    position: static;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto 14px;
+  }
+}
 
 @media (max-width: 768px) {
   .mobile-controls {
@@ -982,113 +1466,492 @@ kbd {
   }
 }
 
+/* ─── GAME MODES & REX POWER-UPS ───────────── */
+
+.mode-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 10px 14px;
+  background-color: var(--px-panel);
+  color: var(--px-border);
+  border: 3px solid var(--px-border);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-shadow:
+    inset -3px -3px 0px var(--px-panel-dark),
+    inset 3px 3px 0px #FFFFFF,
+    0 4px 0px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease;
+}
+
+.mode-btn:hover {
+  transform: translateY(-2px);
+}
+
+.mode-btn:active {
+  transform: translateY(2px);
+}
+
+.mode-btn:focus-visible,
+.lb-tab:focus-visible {
+  outline: 3px solid var(--px-gold-bright);
+  outline-offset: 2px;
+}
+
+.mode-name {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+.mode-desc {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--px-text-muted);
+}
+
+.mode-btn.active {
+  background-color: var(--px-gold);
+  box-shadow:
+    inset -3px -3px 0px #C98816,
+    inset 3px 3px 0px #FFF399,
+    0 2px 0px rgba(0, 0, 0, 0.4);
+  transform: translateY(2px);
+}
+
+.mode-btn.active .mode-desc {
+  color: var(--px-wood-dark);
+}
+
+.mode-btn-power.active {
+  background: linear-gradient(120deg, #FF6F00, #FF3D00, #D50000, #FF6D00);
+  background-size: 300% 100%;
+  color: #FFF;
+  animation: rainbowSlide 4s linear infinite;
+}
+
+.mode-btn-power.active .mode-desc {
+  color: #FFE082;
+}
+
+.power-legend {
+  padding: 12px 14px;
+}
+
+.power-legend[hidden] {
+  display: none;
+}
+
+.power-legend-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--px-border);
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 2px dashed rgba(53, 24, 11, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.power-legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--px-text);
+  line-height: 1.3;
+}
+
+.legend-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background-color: var(--px-panel-dark);
+  border: 2px solid var(--px-border);
+  border-radius: 4px;
+  font-size: 14px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 0 var(--px-border);
+}
+
+.legend-item b {
+  color: var(--px-border);
+  font-weight: 900;
+}
+
+/* ─── REX FEVER GAUGE HUD (Right Column) ───── */
+
+.fever-card {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #FFF8E7;
+  border-color: #A34812;
+}
+
+.fever-card[hidden] {
+  display: none !important;
+}
+
+.fever-bar-outer {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  background: #2D1A10;
+  border: 2px solid var(--px-border);
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.fever-bar-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #FF9800, #FF5722, #F44336);
+  transition: width 0.15s ease-out;
+}
+
+.fever-bar-inner.ready {
+  background: linear-gradient(90deg, #FFD54F, #FF7043, #FF1744, #FFD54F);
+  background-size: 200% 100%;
+  animation: rainbowSlide 1.5s linear infinite;
+}
+
+.fever-bar-inner.active {
+  background: linear-gradient(90deg, #00E676, #FFEA00, #FF3D00);
+  background-size: 200% 100%;
+  animation: rainbowSlide 1s linear infinite;
+}
+
+.fever-percent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+  font-weight: 900;
+  color: #FFF;
+  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+
+.btn-fever-act {
+  width: 100%;
+  padding: 6px 4px;
+  background-color: var(--px-panel-dark);
+  border: 2px solid var(--px-border);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--px-text-muted);
+  cursor: pointer;
+  box-shadow: 0 2px 0 var(--px-border);
+  transition: all 0.1s ease;
+}
+
+.btn-fever-act.ready {
+  background: linear-gradient(180deg, #FF7043, #D50000);
+  color: #FFF;
+  border-color: #35180B;
+  box-shadow: 0 3px 0 #35180B, 0 0 10px rgba(255, 61, 0, 0.6);
+  animation: feverReadyPulse 0.9s ease-in-out infinite;
+  cursor: pointer;
+}
+
+.btn-fever-act.ready:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #35180B;
+}
+
+.btn-fever-act.in-fever {
+  background: linear-gradient(180deg, #FFD54F, #FF8F00);
+  color: #2D1A10;
+  animation: feverReadyPulse 0.6s ease-in-out infinite;
+}
+
+/* Mobile Fever Touch Button */
+.btn-action-touch.fever-touch-btn {
+  background: linear-gradient(180deg, #FF9800, #E65100);
+  font-size: 11px;
+  border-color: #35180B;
+  box-shadow: 0 3px 0 #35180B;
+}
+
+.btn-action-touch.fever-touch-btn[hidden] {
+  display: none !important;
+}
+
+.btn-action-touch.fever-touch-btn.ready {
+  background: linear-gradient(180deg, #FF3D00, #B71C1C);
+  animation: feverReadyPulse 0.8s ease-in-out infinite;
+  box-shadow: 0 3px 0 #35180B, 0 0 12px rgba(255, 61, 0, 0.8);
+}
+
+@keyframes feverReadyPulse {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50%      { transform: scale(1.04); filter: brightness(1.25); }
+}
+
+/* Active Fever Frenzy Board Glamour */
+body.in-fever .game-board-wrapper {
+  animation: feverBorderFlash 0.5s ease-in-out infinite alternate !important;
+  box-shadow: 0 0 24px rgba(255, 112, 67, 0.7);
+}
+
+@keyframes feverBorderFlash {
+  from { border-color: #FFD54F; }
+  to   { border-color: #FF1744; }
+}
+
+.top3-item.empty .t3-name,
+.top3-item.empty .t3-score {
+  color: var(--px-text-muted);
+}
+
+.mode-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: var(--px-border);
+  background-color: var(--px-gold-bright);
+  border: 2px solid var(--px-border);
+  vertical-align: middle;
+}
+
+body.mode-power .mode-tag {
+  background: linear-gradient(120deg, #FFD54F, #FF7043, #FF1744);
+  color: #FFF;
+}
+
+.gameover-mode-tag {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: var(--px-border);
+}
+
+.lb-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.lb-tab {
+  padding: 8px 10px;
+  background-color: var(--px-panel-dark);
+  color: var(--px-border);
+  border: 3px solid var(--px-border);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 3px 0px rgba(0, 0, 0, 0.35);
+}
+
+.lb-tab.active {
+  background-color: var(--px-gold);
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.35);
+  transform: translateY(2px);
+}
+
+@keyframes rainbowSlide {
+  to { background-position: 300% 0; }
+}
+
+@media (max-width: 480px) {
+  .mode-btn { padding: 8px 10px; }
+  .mode-name { font-size: 13px; }
+  .mode-desc { font-size: 11px; }
+  .power-legend-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mode-btn-power.active,
+  body.mode-power .game-board-wrapper {
+    animation: none;
+  }
+}
+
+
 </style>
 </head>
 <body>
 
   <div class="ambient-stars"></div>
 
-  <!-- SVG SPRITE DEFS FOR COOL RED T-REX -->
-  <svg style="display: none;">
+  <!-- SHARED SVG GRADIENTS & FILTERS FOR SMOOTH 3D-SHADED RED T-REX -->
+  <svg width="0" height="0" style="position:absolute; pointer-events:none;" aria-hidden="true">
     <defs>
-      <!-- Red T-Rex Standing / Cool Pose -->
-      <g id="icon-trex-idle">
-        <!-- Tail -->
-        <path d="M12 28 Q4 32 2 24 Q6 16 14 20 Z" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
-        <path d="M4 22 Q8 20 12 24" stroke="#B71C1C" stroke-width="2" fill="none"/>
-        <!-- Feet / Legs -->
-        <ellipse cx="16" cy="34" rx="4" ry="3" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
-        <ellipse cx="26" cy="35" rx="5" ry="3" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
-        <!-- Claws -->
-        <circle cx="13" cy="36" r="1.5" fill="#212121"/>
-        <circle cx="16" cy="37" r="1.5" fill="#212121"/>
-        <circle cx="24" cy="37" r="1.5" fill="#212121"/>
-        <circle cx="28" cy="37" r="1.5" fill="#212121"/>
-        <!-- Chubby Body -->
-        <ellipse cx="21" cy="24" rx="9" ry="10" fill="#E53935" stroke="#35180B" stroke-width="2"/>
-        <!-- Cream Belly -->
-        <path d="M19 19 Q25 19 25 28 Q20 31 17 26 Z" fill="#FFE0B2"/>
-        <!-- Black Hoodie Jacket -->
-        <path d="M13 18 Q21 16 28 20 L27 28 Q21 27 15 28 Z" fill="#1E1E24" stroke="#35180B" stroke-width="2"/>
-        <!-- Hoodie Strings -->
-        <line x1="18" y1="21" x2="17" y2="26" stroke="#FFF" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="22" y1="21" x2="23" y2="26" stroke="#FFF" stroke-width="1.5" stroke-linecap="round"/>
-        <!-- Small Arms -->
-        <path d="M23 22 Q27 23 26 26" stroke="#E53935" stroke-width="3" stroke-linecap="round" fill="none"/>
-        <circle cx="27" cy="26" r="1" fill="#212121"/>
-        <!-- Big Cute Head -->
-        <path d="M15 14 Q14 4 25 4 Q35 4 36 12 Q36 18 26 18 Q16 18 15 14 Z" fill="#E53935" stroke="#35180B" stroke-width="2"/>
-        <!-- Spikes on Head -->
-        <polygon points="17,5 15,2 19,4" fill="#B71C1C"/>
-        <polygon points="14,9 11,8 15,11" fill="#B71C1C"/>
-        <!-- Snout / Smug Smile with Teef -->
-        <path d="M24 14 Q32 14 34 12" stroke="#35180B" stroke-width="2" fill="none"/>
-        <polygon points="27,14 28,16 29,14" fill="#FFF"/>
-        <polygon points="31,13 32,15 33,13" fill="#FFF"/>
-        <!-- Cool Wayfarer Sunglasses -->
-        <polygon points="19,7 26,6 25,12 18,11" fill="#111" stroke="#35180B" stroke-width="1.5"/>
-        <polygon points="27,6 35,7 34,13 27,12" fill="#111" stroke="#35180B" stroke-width="1.5"/>
-        <line x1="25" y1="8" x2="27" y2="8" stroke="#35180B" stroke-width="2"/>
-        <!-- Sunglasses Reflection (Gleam) -->
-        <polygon points="20,8 24,7 23,9 19,10" fill="#4FC3F7" opacity="0.8"/>
-        <polygon points="28,8 33,9 32,10 28,9" fill="#4FC3F7" opacity="0.8"/>
-      </g>
+      <!-- 3D Red Dino Skin Gradient -->
+      <radialGradient id="rexSkinGrad" cx="62%" cy="32%" r="65%" fx="65%" fy="28%">
+        <stop offset="0%" stop-color="#FF6454"/>
+        <stop offset="42%" stop-color="#E62B22"/>
+        <stop offset="82%" stop-color="#B81612"/>
+        <stop offset="100%" stop-color="#7D0B09"/>
+      </radialGradient>
 
-      <!-- Red T-Rex Roaring / Celebrating Pose -->
-      <g id="icon-trex-cheer">
-        <!-- Tail High -->
-        <path d="M12 28 Q2 26 4 16 Q8 14 14 20 Z" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
-        <!-- Legs Jumping -->
-        <ellipse cx="16" cy="34" rx="4" ry="4" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
-        <ellipse cx="26" cy="33" rx="5" ry="4" fill="#D32F2F" stroke="#35180B" stroke-width="2"/>
-        <circle cx="13" cy="37" r="1.5" fill="#212121"/>
-        <circle cx="16" cy="38" r="1.5" fill="#212121"/>
-        <circle cx="25" cy="37" r="1.5" fill="#212121"/>
-        <circle cx="28" cy="37" r="1.5" fill="#212121"/>
-        <!-- Body -->
-        <ellipse cx="21" cy="23" rx="9" ry="10" fill="#E53935" stroke="#35180B" stroke-width="2"/>
-        <path d="M19 19 Q25 19 25 28 Q20 31 17 26 Z" fill="#FFE0B2"/>
-        <path d="M13 18 Q21 16 28 20 L27 28 Q21 27 15 28 Z" fill="#1E1E24" stroke="#35180B" stroke-width="2"/>
-        <!-- Arms Up (Cheering!) -->
-        <path d="M14 19 Q12 12 16 12" stroke="#E53935" stroke-width="3" stroke-linecap="round" fill="none"/>
-        <path d="M26 19 Q30 13 32 15" stroke="#E53935" stroke-width="3" stroke-linecap="round" fill="none"/>
-        <circle cx="16" cy="11" r="1" fill="#212121"/>
-        <circle cx="33" cy="14" r="1" fill="#212121"/>
-        <!-- Head Roaring Up -->
-        <path d="M16 13 Q16 3 26 3 Q36 3 37 10 Q37 17 28 17 Q17 17 16 13 Z" fill="#E53935" stroke="#35180B" stroke-width="2"/>
-        <!-- Open Mouth with Teeth -->
-        <path d="M25 12 Q32 10 34 15 Q29 17 25 14 Z" fill="#B71C1C" stroke="#35180B" stroke-width="1.5"/>
-        <polygon points="27,12 28,14 29,12" fill="#FFF"/>
-        <polygon points="31,11 32,13 33,12" fill="#FFF"/>
-        <!-- Sunglasses Tilted Up (Cool Wink) -->
-        <polygon points="19,5 26,4 25,10 18,9" fill="#111" stroke="#35180B" stroke-width="1.5"/>
-        <polygon points="27,4 35,5 34,11 27,10" fill="#111" stroke="#35180B" stroke-width="1.5"/>
-        <polygon points="20,6 24,5 23,7 19,8" fill="#FFEB3B" opacity="0.9"/>
-        <polygon points="28,6 33,7 32,8 28,7" fill="#FFEB3B" opacity="0.9"/>
-      </g>
+      <!-- 3D Red Limbs / Darker Depth Gradient -->
+      <linearGradient id="rexLimbGrad" x1="20%" y1="10%" x2="80%" y2="90%">
+        <stop offset="0%" stop-color="#F43E34"/>
+        <stop offset="55%" stop-color="#CC1E17"/>
+        <stop offset="100%" stop-color="#870E0A"/>
+      </linearGradient>
+
+      <!-- Warm Cream Jaw & Belly Gradient -->
+      <linearGradient id="rexBellyGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+        <stop offset="0%" stop-color="#FFF6E6"/>
+        <stop offset="55%" stop-color="#F2D2A7"/>
+        <stop offset="100%" stop-color="#C99B68"/>
+      </linearGradient>
+
+      <!-- Charcoal Black Hoodie Gradient -->
+      <linearGradient id="rexHoodieGrad" x1="30%" y1="0%" x2="70%" y2="100%">
+        <stop offset="0%" stop-color="#3E3E47"/>
+        <stop offset="45%" stop-color="#232329"/>
+        <stop offset="100%" stop-color="#111115"/>
+      </linearGradient>
+
+      <!-- Hoodie Sleeve Highlight Gradient -->
+      <linearGradient id="rexSleeveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#4A4A55"/>
+        <stop offset="50%" stop-color="#25252C"/>
+        <stop offset="100%" stop-color="#141418"/>
+      </linearGradient>
+
+      <!-- Glossy Black Claws Gradient -->
+      <linearGradient id="rexClawGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+        <stop offset="0%" stop-color="#686875"/>
+        <stop offset="40%" stop-color="#26262C"/>
+        <stop offset="100%" stop-color="#0B0B0E"/>
+      </linearGradient>
+
+      <!-- Warm Amber 3D Eye Iris Gradient -->
+      <radialGradient id="rexIrisGrad" cx="50%" cy="65%" r="55%">
+        <stop offset="0%" stop-color="#E59838"/>
+        <stop offset="55%" stop-color="#9B4F14"/>
+        <stop offset="100%" stop-color="#421C04"/>
+      </radialGradient>
+
+      <!-- Sunglasses Lens Reflection Gradient -->
+      <linearGradient id="rexLensGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#1B2838"/>
+        <stop offset="45%" stop-color="#0F141C"/>
+        <stop offset="80%" stop-color="#2C221E"/>
+        <stop offset="100%" stop-color="#593A22"/>
+      </linearGradient>
+
+      <!-- Lens Sky Glint -->
+      <linearGradient id="rexGlintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85"/>
+        <stop offset="50%" stop-color="#81D4FA" stop-opacity="0.45"/>
+        <stop offset="100%" stop-color="#FFE082" stop-opacity="0.0"/>
+      </linearGradient>
+
+      <!-- Soft Drop Shadow for 3D depth -->
+      <filter id="rexDropShadow" x="-15%" y="-15%" width="130%" height="130%">
+        <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#120905" flood-opacity="0.45"/>
+      </filter>
     </defs>
   </svg>
 
   <!-- ========== START SCREEN ========== -->
   <div id="screen-start" class="screen active">
+
+    <!-- TOP 3 CHAMPIONS WIDGET (Pinned to top-right on desktop, clean banner on mobile) -->
+    <div class="top3-floating-card pixel-box" id="start-top3-widget" onclick="openLeaderboard()" title="คลิกเพื่อดูอันดับทั้งหมด">
+      <div class="top3-header">
+        <span class="top3-crown">👑</span>
+        <span class="top3-title" id="top3-title">TOP 3 · CLASSIC</span>
+      </div>
+      <div class="top3-list" id="start-top3-list">
+        <div class="top3-item rank-1"><span class="medal">🥇</span><span class="t3-name">กำลังโหลด...</span><span class="t3-score mono">---</span></div>
+        <div class="top3-item rank-2"><span class="medal">🥈</span><span class="t3-name">---</span><span class="t3-score mono">---</span></div>
+        <div class="top3-item rank-3"><span class="medal">🥉</span><span class="t3-name">---</span><span class="t3-score mono">---</span></div>
+      </div>
+    </div>
+
     <div class="start-sheet">
       
-      <!-- T-Rex Hero Mascot Showcase -->
-      <div class="trex-hero-container">
-        <div class="trex-mascot-box">
-          <svg viewBox="0 0 40 40">
-            <use href="#icon-trex-idle"/>
-          </svg>
-        </div>
-        <div class="pixel-speech-bubble">
-          <div class="bubble-title">T-REX SAYS:</div>
-          <div class="bubble-text" id="start-trex-quote">"ถึงมือจะสั้น แต่เล่น Tetris โหดนะน้อง!"</div>
+      <!-- 3D Animated T-Rex Hero Mascot Stage -->
+      <div class="trex-hero-wrapper">
+        <div class="trex-hero-container">
+          <div class="trex-mascot-stage pose-cool" id="start-trex-stage" onclick="pokeStartTrex()" title="จิ้มตัวป๋าเพื่อแกล้งแหย่!">
+            <!-- Populated by get3DTrexSVG() in app.js -->
+          </div>
+          <div class="pixel-speech-bubble">
+            <div class="bubble-title">🦖 T-REX SAYS:</div>
+            <div class="bubble-text" id="start-trex-quote">"ถึงมือป๋าจะสั้น แต่เล่น Tetris ตึงจัดนะบอกเลย! พร้อมลุยยังวัยรุ่น? 🕶️"</div>
+          </div>
         </div>
       </div>
 
       <div class="poster-header">
-        <h1>TETRIS</h1>
-        <div class="poster-sub">16-BIT PIXEL RETRO ARCADE</div>
+        <div class="arcade-logo-badge">
+          <span class="logo-dino-icon">🦖</span>
+          <h1>TETRIS</h1>
+          <span class="logo-arcade-pill">PRO ARCADE</span>
+        </div>
+        <div class="poster-sub">FEAT. COOL RED T-REX • 5-TRACK CHIPTUNE BGM</div>
+      </div>
+
+      <!-- Sound & Music Bar on Start Screen -->
+      <div class="audio-control-bar">
+        <button type="button" class="btn-audio-pill" onclick="toggleBgm()">
+          <span class="bgm-status-label">🎵 เพลง: Tetris Classic</span>
+        </button>
+        <button type="button" class="btn-audio-pill" onclick="switchBgmTrack()" title="เปลี่ยนเพลงประกอบ">
+          <span>⏭ เปลี่ยนเพลง</span>
+        </button>
+        <button type="button" class="btn-audio-pill" onclick="toggleMute()">
+          <span class="sfx-status-label">🔊 เอฟเฟกต์: เปิด</span>
+        </button>
+      </div>
+
+      <div class="mode-switch" role="group" aria-label="เลือกโหมดเกม">
+        <button type="button" class="mode-btn active" id="mode-btn-classic" aria-pressed="true" onclick="setGameMode('classic')">
+          <span class="mode-name">CLASSIC</span>
+          <span class="mode-desc">เตตริสดั้งเดิม</span>
+        </button>
+        <button type="button" class="mode-btn mode-btn-power" id="mode-btn-power" aria-pressed="false" onclick="setGameMode('power')">
+          <span class="mode-name">REX FEVER 💥</span>
+          <span class="mode-desc">เกจไม้ตาย & Fever x3</span>
+        </button>
+      </div>
+
+      <div class="pixel-box power-legend" id="power-legend" hidden>
+        <div class="power-legend-title">🦖 โหมด REX FEVER: กติกาดั้งเดิม + สะสมเกจพลังท่าไม้ตาย!</div>
+        <div class="power-legend-grid fever-grid">
+          <div class="legend-item"><span class="legend-badge">⚡</span><span><b>ชาร์จเกจ REX:</b> วางบล็อกและต่อแถว ยิ่งแถวเยอะเกจยิ่งพุ่งเร็ว</span></div>
+          <div class="legend-item"><span class="legend-badge">💥</span><span><b>REX STOMP [F]:</b> กระทืบพื้น ล้าง 4 แถวล่างสุด ช่วยชีวิตตอนบล็อกสูง!</span></div>
+          <div class="legend-item"><span class="legend-badge">🔥</span><span><b>FEVER TIME 15วิ:</b> คะแนนคูณ 3x + ชิ้นส่วนทองนำโชค!</span></div>
+          <div class="legend-item"><span class="legend-badge">🏆</span><span><b>ตารางอันดับแยก:</b> บันทึกและชิงแชมป์สถิติ REX FEVER โดยเฉพาะ</span></div>
+        </div>
       </div>
 
       <div class="pixel-box name-form">
@@ -1097,7 +1960,7 @@ kbd {
           <input type="text" id="player-name" placeholder="พิมพ์ชื่อของคุณ หรือกดลุยเลย!" maxlength="16" autocomplete="off">
         </div>
         <button id="btn-start" class="btn-pixel-primary" onclick="startGame()">
-          <span>START GAME! (เริ่มเล่น)</span>
+          <span>START GAME! (เริ่มเล่นเลย)</span>
           <span>▶</span>
         </button>
       </div>
@@ -1112,12 +1975,13 @@ kbd {
       </div>
 
       <div class="pixel-box keys-legend">
-        <div class="key-item"><kbd>◀</kbd><kbd>▶</kbd> <span>เลื่อนบล็อก</span></div>
+        <div class="key-item"><kbd>◀</kbd><kbd>▶</kbd> <span>เลื่อนซ้าย-ขวา</span></div>
         <div class="key-item"><kbd>▲</kbd> <span>หมุนบล็อก</span></div>
         <div class="key-item"><kbd>▼</kbd> <span>เร่งลง</span></div>
-        <div class="key-item"><kbd>Space</kbd> <span>วางด่วน (Drop)</span></div>
-        <div class="key-item"><kbd>C</kbd> <span>เก็บตัว (Hold)</span></div>
-        <div class="key-item"><kbd>P</kbd> <span>พัก / เมนู</span></div>
+        <div class="key-item"><kbd>Space</kbd> <span>ทิ้งดิ่ง (Hard Drop)</span></div>
+        <div class="key-item"><kbd>C</kbd> <span>เก็บสลับตัว (Hold)</span></div>
+        <div class="key-item"><kbd>F</kbd> / <kbd>E</kbd> <span>ปล่อยท่าไม้ตาย Rex (เมื่อเกจ 100%)</span></div>
+        <div class="key-item"><kbd>P</kbd> <span>พักเกม / เมนู</span></div>
       </div>
 
     </div>
@@ -1129,8 +1993,16 @@ kbd {
 
       <!-- Header bar -->
       <div class="game-top-bar">
-        <div class="game-title-badge">🦖 PIXEL TETRIS</div>
-        <div class="pilot-tag mono" id="display-player-name">PLAYER: —</div>
+        <div class="game-title-badge">🦖 T-REX TETRIS <span class="mode-tag" id="display-mode-tag">CLASSIC</span></div>
+        <div class="top-bar-right">
+          <button type="button" class="btn-top-mini" onclick="toggleBgm()" title="เปิด/ปิดเพลงดนตรี">
+            <span class="bgm-status-label">🎵 เพลง</span>
+          </button>
+          <button type="button" class="btn-top-mini" onclick="switchBgmTrack()" title="เปลี่ยนเพลง">
+            <span>⏭</span>
+          </button>
+          <div class="pilot-tag mono" id="display-player-name">PLAYER: —</div>
+        </div>
       </div>
 
       <div class="game-layout">
@@ -1145,12 +2017,10 @@ kbd {
             </div>
           </div>
 
-          <!-- T-REX INTERACTIVE COMPANION -->
-          <div class="pixel-box trex-companion-box" id="trex-companion" onclick="pokeTrex()">
-            <div class="companion-sprite" id="companion-svg-wrap">
-              <svg viewBox="0 0 40 40" id="companion-svg">
-                <use href="#icon-trex-idle"/>
-              </svg>
+          <!-- T-REX INTERACTIVE 3D COMPANION -->
+          <div class="pixel-box trex-companion-box" id="trex-companion" onclick="pokeTrex()" title="จิ้มตัวป๋าเพื่อขอกำลังใจ!">
+            <div class="companion-sprite pose-cool" id="companion-svg-wrap">
+              <!-- Populated by renderTrexSVG() in app.js -->
             </div>
             <div class="companion-bubble" id="companion-speech">
               สู้ๆ วัยรุ่น!
@@ -1159,10 +2029,10 @@ kbd {
 
           <!-- SOUND / PAUSE -->
           <button class="btn-pixel-secondary" id="btn-pause" onclick="togglePause()">
-            <span>⏸ พัก</span>
+            <span>⏸ พักเกม</span>
           </button>
           <button class="btn-pixel-secondary" id="btn-mute" onclick="toggleMute()">
-            <span id="mute-label">🔊 เสียง</span>
+            <span id="mute-label" class="sfx-status-label">🔊 เอฟเฟกต์: เปิด</span>
           </button>
         </div>
 
@@ -1176,10 +2046,13 @@ kbd {
             <div class="pixel-box pause-box">
               <h2 class="pause-title">PAUSED</h2>
               <button class="btn-pixel-primary" id="btn-resume" onclick="togglePause()">
-                <span>เล่นต่อ</span>
+                <span>▶ เล่นต่อ</span>
+              </button>
+              <button class="btn-pixel-secondary" onclick="toggleBgm()">
+                <span class="bgm-status-label">🎵 เพลง</span>
               </button>
               <button class="btn-pixel-secondary" id="btn-quit" onclick="quitGame()">
-                <span>หน้าหลัก</span>
+                <span>🏠 หน้าหลัก</span>
               </button>
             </div>
           </div>
@@ -1220,6 +2093,18 @@ kbd {
             <div class="stat-label">COMBO</div>
             <div class="stat-val mono" id="display-combo" style="color: var(--px-red);">0</div>
           </div>
+
+          <!-- REX FEVER GAUGE (Power mode only) -->
+          <div class="pixel-box stat-card fever-card" id="fever-card" hidden>
+            <div class="stat-label">🦖 REX FEVER</div>
+            <div class="fever-bar-outer" id="fever-bar-outer">
+              <div class="fever-bar-inner" id="fever-bar-inner" style="width: 0%;"></div>
+              <span class="fever-percent" id="fever-percent">0%</span>
+            </div>
+            <button type="button" class="btn-fever-act" id="btn-fever-act" onclick="triggerRexUltimate()">
+              <span id="fever-act-label">⚡ CHARGING</span>
+            </button>
+          </div>
         </div>
 
       </div>
@@ -1237,6 +2122,9 @@ kbd {
 
           <!-- Action Buttons -->
           <div class="action-cluster">
+            <button class="btn-action-touch fever-touch-btn" id="btn-touch-fever" onclick="triggerRexUltimate()" hidden>
+              <span>💥 REX!</span>
+            </button>
             <button class="btn-action-touch hold-btn" id="btn-touch-hold">
               <span>HOLD</span>
             </button>
@@ -1258,16 +2146,15 @@ kbd {
     <div class="pixel-box-wood gameover-sheet">
       <div class="gameover-header">
         <h2>GAME OVER!</h2>
+        <div class="gameover-mode-tag" id="result-mode">CLASSIC</div>
       </div>
 
       <div class="gameover-rex-row">
-        <div style="width: 70px; height: 70px;">
-          <svg viewBox="0 0 40 40">
-            <use href="#icon-trex-idle"/>
-          </svg>
+        <div class="gameover-rex-stage pose-wink" id="gameover-trex-stage" onclick="pokeGameOverTrex()">
+          <!-- Populated by renderTrexSVG() in app.js -->
         </div>
-        <div class="pixel-speech-bubble" style="max-width: 220px;">
-          <div class="bubble-title">T-REX SAYS:</div>
+        <div class="pixel-speech-bubble" style="max-width: 240px;">
+          <div class="bubble-title">🦖 T-REX SAYS:</div>
           <div class="bubble-text" id="gameover-trex-quote">"ไม่เป็นไรน่า! ไดโนเสาร์ยังสูญพันธุ์ได้ แต่นายเล่นใหม่ได้เสมอ!"</div>
         </div>
       </div>
@@ -1302,6 +2189,10 @@ kbd {
         <span>↺</span>
       </button>
 
+      <button class="btn-pixel-secondary btn-home-big" id="btn-back-home" onclick="quitGame()">
+        <span>🏠 กลับสู่หน้าหลัก (Main Menu)</span>
+      </button>
+
       <div class="dual-btn-row">
         <button class="btn-pixel-secondary" id="btn-view-leaderboard" onclick="openLeaderboard()">
           <span>🏆 อันดับ</span>
@@ -1321,6 +2212,10 @@ kbd {
         <button class="btn-pixel-back" id="btn-back-from-leaderboard" onclick="goBack()">
           <span>◀ กลับ</span>
         </button>
+      </div>
+      <div class="lb-tabs" role="tablist" aria-label="ตารางอันดับตามโหมด">
+        <button type="button" class="lb-tab active" id="lb-tab-classic" role="tab" aria-selected="true" onclick="setLeaderboardTab('classic')">CLASSIC</button>
+        <button type="button" class="lb-tab" id="lb-tab-power" role="tab" aria-selected="false" onclick="setLeaderboardTab('power')">REX FEVER</button>
       </div>
       <div id="leaderboard-list" class="leaderboard-list">
         <div class="loading">กำลังดึงข้อมูล...</div>
@@ -1386,17 +2281,171 @@ window.SUPABASE_ANON_KEY = 'sb_publishable_pYijPM7RWg4088YIZiNIBg_xr5GUAt1';
    SYNTHESIZED RETRO AUDIO ENGINE
    ==================================================== */
 /* =============================================
-   sound.js — Web Audio Synthesizer Sound Engine
-   (No external audio files needed, zero latency)
+   sound.js — High-Energy Multi-Track Chiptune Engine
+   5 Diverse Upbeat Tracks + Full Dynamic SFX
    ============================================= */
+
+const NOTE_FREQ = {
+  REST: 0,
+  // Bass Octaves (2 & 3)
+  C2: 65.41, D2: 73.42, E2: 82.41, F2: 87.31, G2: 98.00, A2: 110.00, B2: 123.47,
+  C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, F3S: 185.00, G3: 196.00, G3S: 207.65, A3: 220.00, B3: 246.94,
+  // Mid & High Octaves (4, 5 & 6)
+  C4: 261.63, D4: 293.66, D4S: 311.13, E4: 329.63, F4: 349.23, F4S: 369.99, G4: 392.00, G4S: 415.30, A4: 440.00, B4: 493.88,
+  C5: 523.25, D5: 587.33, D5S: 622.25, E5: 659.25, F5: 698.46, F5S: 739.99, G5: 783.99, G5S: 830.61, A5: 880.00, B5: 987.77,
+  C6: 1046.50, D6: 1174.66, E6: 1318.51
+};
+
+// ── Track 1: TETRIS ARCADE RUSH (Fast, Bouncy, Classic Russian Dance) ──
+const TRACK_TETRIS_RUSH = {
+  id: 1,
+  name: 'Tetris Arcade Rush',
+  badge: '🎵 เพลง 1/5: Tetris Rush ⚡',
+  tempoMs: 168,
+  melody: [
+    ['E5', 2], ['B4', 1], ['C5', 1], ['D5', 2], ['C5', 1], ['B4', 1],
+    ['A4', 2], ['A4', 1], ['C5', 1], ['E5', 2], ['D5', 1], ['C5', 1],
+    ['B4', 3], ['C5', 1], ['D5', 2], ['E5', 2],
+    ['C5', 2], ['A4', 2], ['A4', 2], ['REST', 2],
+    ['D5', 2], ['F5', 1], ['A5', 2], ['G5', 1], ['F5', 1],
+    ['E5', 3], ['C5', 1], ['E5', 2], ['D5', 1], ['C5', 1],
+    ['B4', 2], ['B4', 1], ['C5', 1], ['D5', 2], ['E5', 2],
+    ['C5', 2], ['A4', 2], ['A4', 2], ['REST', 2],
+    // High-energy Bridge
+    ['E5', 4], ['C5', 4], ['D5', 4], ['B4', 4],
+    ['C5', 4], ['A4', 4], ['G4S', 4], ['B4', 4],
+    ['E5', 4], ['C5', 4], ['D5', 4], ['B4', 4],
+    ['C5', 2], ['E5', 2], ['A5', 4], ['G5S', 4], ['REST', 2]
+  ],
+  bass: [
+    'E3', 'E2', 'A3', 'A2', 'G3S', 'E3', 'A3', 'A2',
+    'D3', 'D2', 'C3', 'C2', 'B2', 'E3', 'A3', 'A2',
+    'E3', 'B2', 'C3', 'A2', 'D3', 'A2', 'E3', 'B2',
+    'A2', 'C3', 'E3', 'A3'
+  ],
+  drumStyle: 'dance'
+};
+
+// ── Track 2: DINO DISCO GROOVE (Funky 80s Slap Bass & Brass Lead) ──
+const TRACK_DINO_DISCO = {
+  id: 2,
+  name: 'Dino Disco Groove',
+  badge: '🎵 เพลง 2/5: Dino Disco 🕺',
+  tempoMs: 155,
+  melody: [
+    ['C5', 1], ['C5', 1], ['E5', 2], ['G5', 2], ['E5', 1], ['D5', 1],
+    ['C5', 2], ['A4', 2], ['G4', 2], ['REST', 2],
+    ['A4', 1], ['C5', 1], ['D5', 2], ['D5S', 1], ['E5', 2], ['G5', 1],
+    ['A5', 3], ['G5', 1], ['E5', 2], ['REST', 2],
+    ['G5', 2], ['E5', 1], ['D5', 1], ['C5', 2], ['A4', 2],
+    ['D5', 2], ['C5', 1], ['A4', 1], ['G4', 2], ['REST', 2],
+    ['A4', 1], ['C5', 1], ['D5', 2], ['E5', 2], ['D5', 2],
+    ['C5', 4], ['C5', 2], ['REST', 2]
+  ],
+  bass: [
+    'C3', 'C2', 'C3', 'E3', 'A2', 'A3', 'G2', 'G3',
+    'F2', 'F3', 'E2', 'E3', 'D2', 'D3', 'G2', 'G3',
+    'C3', 'C2', 'C3', 'G3', 'A2', 'A3', 'F2', 'F3',
+    'D2', 'D3', 'G2', 'G3', 'C3', 'G3', 'C3', 'REST'
+  ],
+  drumStyle: 'disco'
+};
+
+// ── Track 3: STARDEW RPG CARNIVAL (Joyful Cozy Town Jamboree) ──
+const TRACK_STARDEW_CARNIVAL = {
+  id: 3,
+  name: 'Stardew Carnival',
+  badge: '🎵 เพลง 3/5: Cozy Carnival 🌾',
+  tempoMs: 190,
+  melody: [
+    ['G4', 2], ['C5', 2], ['E5', 2], ['D5', 1], ['C5', 1],
+    ['D5', 2], ['G4', 2], ['G4', 2], ['REST', 2],
+    ['A4', 2], ['B4', 2], ['C5', 2], ['E5', 2],
+    ['D5', 4], ['G4', 2], ['REST', 2],
+    ['E5', 2], ['F5', 1], ['G5', 2], ['E5', 2], ['C5', 1],
+    ['F5', 2], ['E5', 1], ['D5', 2], ['B4', 2], ['G4', 1],
+    ['A4', 1], ['B4', 1], ['C5', 2], ['D5', 2], ['B4', 2],
+    ['C5', 4], ['C5', 2], ['REST', 2]
+  ],
+  bass: [
+    'C3', 'G3', 'E3', 'G3', 'G2', 'D3', 'B2', 'D3',
+    'F2', 'C3', 'A2', 'C3', 'G2', 'D3', 'B2', 'G2',
+    'C3', 'G3', 'E3', 'G3', 'F2', 'C3', 'D3', 'A2',
+    'G2', 'D3', 'G3', 'B2', 'C3', 'G3', 'C3', 'REST'
+  ],
+  drumStyle: 'jamboree'
+};
+
+// ── Track 4: CYBERPUNK 8-BIT SPEEDRUN (High-Speed Adrenaline Rush) ──
+const TRACK_CYBER_CHASE = {
+  id: 4,
+  name: 'Cyberpunk Speedrun',
+  badge: '🎵 เพลง 4/5: Cyber Speedrun 🚀',
+  tempoMs: 142,
+  melody: [
+    ['A4', 1], ['C5', 1], ['E5', 1], ['A5', 2], ['G5', 1], ['E5', 2],
+    ['D5', 1], ['E5', 1], ['G5', 1], ['D5', 2], ['C5', 1], ['A4', 2],
+    ['A4', 1], ['C5', 1], ['E5', 1], ['B5', 2], ['A5', 1], ['G5', 2],
+    ['E5', 1], ['G5', 1], ['A5', 2], ['REST', 1], ['A5', 2], ['REST', 1],
+    ['F5', 2], ['E5', 1], ['D5', 2], ['C5', 1], ['B4', 2],
+    ['C5', 2], ['D5', 1], ['E5', 2], ['A4', 2], ['REST', 1],
+    ['A5', 2], ['G5', 1], ['F5', 1], ['E5', 2], ['D5', 1], ['C5', 1],
+    ['B4', 2], ['E5', 2], ['A4', 4]
+  ],
+  bass: [
+    'A2', 'A3', 'A2', 'A3', 'G2', 'G3', 'G2', 'G3',
+    'F2', 'F3', 'F2', 'F3', 'E2', 'E3', 'G3', 'E3',
+    'D2', 'D3', 'D2', 'D3', 'C2', 'C3', 'C2', 'C3',
+    'B2', 'B3', 'E3', 'E2', 'A2', 'E3', 'A3', 'REST'
+  ],
+  drumStyle: 'cyber'
+};
+
+// ── Track 5: JURASSIC SUNSHINE REGGAE (Bouncy Caribbean Dino Chill) ──
+const TRACK_JURASSIC_BREEZE = {
+  id: 5,
+  name: 'Jurassic Sunshine',
+  badge: '🎵 เพลง 5/5: Jurassic Sunshine 🌴',
+  tempoMs: 205,
+  melody: [
+    ['E5', 1], ['REST', 1], ['G5', 2], ['A5', 2], ['G5', 1], ['E5', 1],
+    ['D5', 2], ['C5', 2], ['D5', 2], ['E5', 2],
+    ['G5', 1], ['REST', 1], ['E5', 2], ['D5', 1], ['C5', 1], ['A4', 2],
+    ['C5', 4], ['G4', 2], ['REST', 2],
+    ['A4', 1], ['REST', 1], ['C5', 2], ['D5', 2], ['E5', 1], ['G5', 1],
+    ['A5', 2], ['G5', 2], ['E5', 2], ['D5', 2],
+    ['C5', 2], ['E5', 1], ['D5', 1], ['C5', 2], ['A4', 2],
+    ['C5', 4], ['C5', 2], ['REST', 2]
+  ],
+  bass: [
+    'C3', 'REST', 'G2', 'C3', 'F2', 'REST', 'C3', 'F2',
+    'G2', 'REST', 'D3', 'G2', 'C3', 'REST', 'G2', 'C3',
+    'F2', 'REST', 'C3', 'F2', 'C3', 'REST', 'G2', 'C3',
+    'D2', 'REST', 'A2', 'D2', 'G2', 'G3', 'C3', 'REST'
+  ],
+  drumStyle: 'reggae'
+};
+
+const BGM_TRACKS = [
+  TRACK_TETRIS_RUSH,
+  TRACK_DINO_DISCO,
+  TRACK_STARDEW_CARNIVAL,
+  TRACK_CYBER_CHASE,
+  TRACK_JURASSIC_BREEZE
+];
 
 class SoundEngine {
   constructor() {
     this.ctx = null;
-    this.muted = false;
-    this.musicEnabled = false;
-    this.musicTimeout = null;
-    this.currentNoteIndex = 0;
+    this.sfxMuted = false;
+    this.musicEnabled = true;
+    this.musicPlaying = false;
+    this.trackIndex = 0;
+    this.musicTimer = null;
+    this.melodyStepIndex = 0;
+    this.bassStepIndex = 0;
+    this.stepRemaining = 0;
+    this.masterBgmVolume = 0.082;
   }
 
   _initContext() {
@@ -1411,18 +2460,258 @@ class SoundEngine {
     }
   }
 
-  toggleMute() {
-    this.muted = !this.muted;
-    if (this.muted && this.musicEnabled) {
-      this.stopMusic();
-      this.musicEnabled = false;
+  unlockAudio() {
+    this._initContext();
+    if (this.musicEnabled && !this.musicPlaying) {
+      this.startMusic();
     }
-    return this.muted;
   }
 
-  // ── Short Tone Generator ───────────────────
-  _playTone(freq, type = 'sine', duration = 0.08, gainVal = 0.15, pitchBend = null) {
-    if (this.muted) return;
+  // ── Music Playback & Switching ──────────────────
+  startMusic() {
+    this._initContext();
+    if (!this.ctx) return;
+
+    this.musicEnabled = true;
+    if (this.musicPlaying) return;
+    this.musicPlaying = true;
+    this.melodyStepIndex = 0;
+    this.bassStepIndex = 0;
+    this.stepRemaining = 0;
+
+    this._scheduleNextBeat();
+    this._updateUIButtons();
+  }
+
+  stopMusic() {
+    this.musicPlaying = false;
+    if (this.musicTimer) {
+      clearTimeout(this.musicTimer);
+      this.musicTimer = null;
+    }
+    this._updateUIButtons();
+  }
+
+  toggleMusic() {
+    this._initContext();
+    if (this.musicPlaying) {
+      this.musicEnabled = false;
+      this.stopMusic();
+    } else {
+      this.musicEnabled = true;
+      this.startMusic();
+    }
+    this.playClick();
+    this._updateUIButtons();
+    return this.musicEnabled;
+  }
+
+  nextTrack() {
+    this._initContext();
+    this.trackIndex = (this.trackIndex + 1) % BGM_TRACKS.length;
+    this.melodyStepIndex = 0;
+    this.bassStepIndex = 0;
+    this.stepRemaining = 0;
+    if (!this.musicPlaying) {
+      this.musicEnabled = true;
+      this.startMusic();
+    }
+    this.playClick();
+    this._updateUIButtons();
+    return BGM_TRACKS[this.trackIndex].badge;
+  }
+
+  toggleMute() {
+    this._initContext();
+    this.sfxMuted = !this.sfxMuted;
+    if (!this.sfxMuted) this.playClick();
+    this._updateUIButtons();
+    return this.sfxMuted;
+  }
+
+  _updateUIButtons() {
+    const muteLabels = document.querySelectorAll('.sfx-status-label');
+    muteLabels.forEach(el => {
+      el.textContent = this.sfxMuted ? '🔇 เอฟเฟกต์: ปิด' : '🔊 เอฟเฟกต์: เปิด';
+    });
+
+    const bgmLabels = document.querySelectorAll('.bgm-status-label');
+    const track = BGM_TRACKS[this.trackIndex];
+    bgmLabels.forEach(el => {
+      el.textContent = this.musicEnabled ? track.badge : '🎵 เพลง: ปิด';
+    });
+  }
+
+  // ── Sequencer Beat Engine ───────────────────────
+  _scheduleNextBeat() {
+    if (!this.musicPlaying || !this.musicEnabled) return;
+
+    const track = BGM_TRACKS[this.trackIndex];
+    const stepMs = track.tempoMs;
+
+    // 1. MELODY VOICE
+    if (this.stepRemaining <= 0) {
+      const [noteName, durSteps] = track.melody[this.melodyStepIndex];
+      const freq = NOTE_FREQ[noteName] || 0;
+      const noteDurationSec = (durSteps * stepMs) / 1000;
+
+      if (freq > 0) {
+        // Bright chiptune lead
+        this._playBgmTone(freq, noteDurationSec * 0.86, 'square', this.masterBgmVolume, 2200);
+        // Warm harmonic sub-layer
+        this._playBgmTone(freq * 0.5, noteDurationSec * 0.82, 'triangle', this.masterBgmVolume * 0.55, 1400);
+      }
+
+      this.stepRemaining = durSteps;
+      this.melodyStepIndex = (this.melodyStepIndex + 1) % track.melody.length;
+    }
+
+    // 2. BASS VOICE (every 2 eighth-steps)
+    if (this.bassStepIndex % 2 === 0) {
+      const bassIdx = Math.floor(this.bassStepIndex / 2) % track.bass.length;
+      const bassNote = track.bass[bassIdx];
+      const bassFreq = NOTE_FREQ[bassNote] || 0;
+
+      if (bassFreq > 0) {
+        this._playBgmTone(bassFreq, (stepMs * 1.7) / 1000, 'triangle', this.masterBgmVolume * 1.25, 900);
+      }
+
+      // Snappy Kick Drum on downbeats
+      if (this.bassStepIndex % 4 === 0) {
+        this._playKick(0.045);
+      }
+    }
+
+    // 3. RHYTHM / DRUM PERCUSSION
+    if (track.drumStyle === 'dance' || track.drumStyle === 'disco' || track.drumStyle === 'cyber') {
+      if (this.bassStepIndex % 4 === 2) {
+        // Crisp 8-bit Snare on beat 2 & 4
+        this._playSnare(0.035);
+      } else {
+        // Hi-hat on off-beats
+        this._playHiHat(0.02);
+      }
+    } else {
+      // Jamboree & Reggae rhythmic accents
+      if (this.bassStepIndex % 2 === 1) {
+        this._playHiHat(0.024);
+      }
+    }
+
+    this.stepRemaining--;
+    this.bassStepIndex = (this.bassStepIndex + 1) % (track.bass.length * 2);
+
+    this.musicTimer = setTimeout(() => this._scheduleNextBeat(), stepMs);
+  }
+
+  _playBgmTone(freq, duration, type = 'square', gainVal = 0.08, filterFreq = 2000) {
+    if (!this.ctx || !this.musicEnabled) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const filter = this.ctx.createBiquadFilter();
+      const gain = this.ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(filterFreq, now);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(gainVal, now + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0006, now + duration);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration + 0.02);
+    } catch (e) {}
+  }
+
+  _playKick(gainVal = 0.04) {
+    if (!this.ctx || !this.musicEnabled) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.exponentialRampToValueAtTime(35, now + 0.08);
+
+      gain.gain.setValueAtTime(gainVal, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.09);
+    } catch (e) {}
+  }
+
+  _playSnare(gainVal = 0.035) {
+    if (!this.ctx || !this.musicEnabled) return;
+    try {
+      const now = this.ctx.currentTime;
+      const duration = 0.07;
+      const bufferSize = Math.floor(this.ctx.sampleRate * duration);
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.4));
+      }
+
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 1600;
+
+      const gain = this.ctx.createGain();
+      gain.gain.setValueAtTime(gainVal, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.ctx.destination);
+      noise.start(now);
+    } catch (e) {}
+  }
+
+  _playHiHat(gainVal = 0.02) {
+    if (!this.ctx || !this.musicEnabled) return;
+    try {
+      const duration = 0.03;
+      const bufferSize = Math.floor(this.ctx.sampleRate * duration);
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.25));
+      }
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.value = 6000;
+
+      const gain = this.ctx.createGain();
+      gain.gain.value = gainVal;
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.ctx.destination);
+      noise.start();
+    } catch (e) {}
+  }
+
+  // ── Sound Effects (SFX) ─────────────────────────
+  _playTone(freq, type = 'sine', duration = 0.08, gainVal = 0.16, pitchBend = null) {
+    if (this.sfxMuted) return;
     this._initContext();
     if (!this.ctx) return;
 
@@ -1449,14 +2738,13 @@ class SoundEngine {
     } catch (e) {}
   }
 
-  // ── Noise Generator (for impact/thud) ──────
-  _playNoise(duration = 0.06, gainVal = 0.2) {
-    if (this.muted) return;
+  _playNoise(duration = 0.06, gainVal = 0.2, filterFreq = 450) {
+    if (this.sfxMuted) return;
     this._initContext();
     if (!this.ctx) return;
 
     try {
-      const bufferSize = this.ctx.sampleRate * duration;
+      const bufferSize = Math.floor(this.ctx.sampleRate * duration);
       const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
@@ -1468,7 +2756,7 @@ class SoundEngine {
 
       const filter = this.ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.value = 450;
+      filter.frequency.value = filterFreq;
 
       const gain = this.ctx.createGain();
       const now = this.ctx.currentTime;
@@ -1483,61 +2771,186 @@ class SoundEngine {
     } catch (e) {}
   }
 
-  // ── Public Sound Effects ───────────────────
+  playClick() {
+    this._playTone(580, 'triangle', 0.045, 0.12, 780);
+  }
+
   playMove() {
-    this._playTone(280, 'triangle', 0.04, 0.08);
+    this._playTone(300, 'triangle', 0.035, 0.1, 240);
   }
 
   playRotate() {
-    this._playTone(420, 'sine', 0.07, 0.12, 600);
+    this._playTone(390, 'sine', 0.075, 0.15, 680);
+  }
+
+  playHold() {
+    this._playTone(440, 'triangle', 0.06, 0.14);
+    setTimeout(() => this._playTone(587.33, 'triangle', 0.08, 0.14), 50);
   }
 
   playDrop() {
-    this._playNoise(0.04, 0.12);
+    this._playNoise(0.045, 0.14, 380);
+    this._playTone(160, 'triangle', 0.05, 0.12, 90);
   }
 
   playHardDrop() {
-    this._playNoise(0.09, 0.28);
-    this._playTone(130, 'triangle', 0.1, 0.2, 55);
+    this._playNoise(0.09, 0.3, 600);
+    this._playTone(150, 'triangle', 0.11, 0.24, 52);
+    setTimeout(() => this._playTone(880, 'sine', 0.06, 0.08, 1200), 25);
   }
 
-  playClear(lines = 1) {
-    if (this.muted) return;
+  playRexVoice(pose = 'cool') {
+    if (this.sfxMuted) return;
     this._initContext();
     if (!this.ctx) return;
 
+    if (pose === 'roar') {
+      this._playNoise(0.28, 0.28, 900);
+      this._playTone(220, 'sawtooth', 0.26, 0.16, 115);
+      setTimeout(() => this._playTone(330, 'sawtooth', 0.18, 0.15, 140), 90);
+    } else if (pose === 'dance') {
+      [330, 440, 554.37, 659.25].forEach((f, i) => {
+        setTimeout(() => this._playTone(f, 'square', 0.07, 0.11), i * 55);
+      });
+    } else if (pose === 'wink') {
+      this._playTone(659.25, 'sine', 0.07, 0.16, 880);
+      setTimeout(() => this._playTone(987.77, 'sine', 0.12, 0.18, 1318.5), 75);
+    } else {
+      this._playTone(350, 'triangle', 0.1, 0.14, 700);
+      setTimeout(() => this._playTone(1046.5, 'sine', 0.12, 0.14), 85);
+    }
+  }
+
+  playClear(lines = 1, combo = 0) {
+    if (this.sfxMuted) return;
+    this._initContext();
+    if (!this.ctx) return;
+
+    const pitchMult = 1 + Math.min(Math.max(0, combo), 8) * 0.06;
+
     if (lines === 4) {
-      // 🌟 Tetris Fanfare! (4 lines cleared)
+      this.playRexVoice('roar');
       const chords = [
-        [523.25, 659.25], // C5, E5
-        [659.25, 783.99], // E5, G5
-        [783.99, 1046.50],// G5, C6
-        [1046.50, 1318.5] // C6, E6
+        [523.25, 659.25],
+        [659.25, 783.99],
+        [783.99, 1046.50],
+        [1046.50, 1318.50]
       ];
       chords.forEach((chord, step) => {
         setTimeout(() => {
-          chord.forEach(f => this._playTone(f, 'square', 0.18, 0.15));
-        }, step * 80);
+          chord.forEach(f => this._playTone(f * pitchMult, 'square', 0.18, 0.14));
+        }, step * 75);
       });
     } else {
-      // Single/Double/Triple clear chime
       const notes = [440, 554.37, 659.25, 880];
       const count = Math.min(lines + 1, notes.length);
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
-          this._playTone(notes[i], 'triangle', 0.12, 0.15);
-        }, i * 60);
+          this._playTone(notes[i] * pitchMult, 'triangle', 0.13, 0.18);
+          this._playTone(notes[i] * pitchMult * 1.5, 'sine', 0.1, 0.08);
+        }, i * 55);
       }
     }
   }
 
+  // Rex Fever: Gauge reaches 100% (READY!)
+  playFeverReady() {
+    if (this.sfxMuted) return;
+    this._initContext();
+    if (!this.ctx) return;
+    [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((f, i) => {
+      setTimeout(() => this._playTone(f, 'square', 0.12, 0.14), i * 50);
+    });
+  }
+
+  // Rex Fever: Ultimate unleashed (Stomp + Roar!)
+  playRexUltimate() {
+    if (this.sfxMuted) return;
+    this._initContext();
+    if (!this.ctx) return;
+    this._playNoise(0.4, 0.45, 350);
+    this._playTone(90, 'sawtooth', 0.45, 0.35, 30);
+    setTimeout(() => {
+      this._playTone(220, 'sawtooth', 0.35, 0.25, 110);
+      this._playNoise(0.3, 0.3, 800);
+    }, 80);
+    setTimeout(() => {
+      [523.25, 659.25, 783.99, 1046.50].forEach(f => {
+        this._playTone(f, 'square', 0.2, 0.16);
+      });
+    }, 220);
+  }
+
+  // Bonus sound on line clears during Fever Frenzy
+  playFeverBonus() {
+    if (this.sfxMuted) return;
+    this._initContext();
+    if (!this.ctx) return;
+    [1046.5, 1318.5, 1567.98].forEach((f, i) => {
+      setTimeout(() => this._playTone(f, 'triangle', 0.1, 0.12), i * 45);
+    });
+  }
+
+  // Cooldown chime when fever frenzy concludes
+  playFeverEnd() {
+    if (this.sfxMuted) return;
+    this._initContext();
+    if (!this.ctx) return;
+    [783.99, 659.25, 523.25].forEach((f, i) => {
+      setTimeout(() => this._playTone(f, 'sine', 0.18, 0.12), i * 90);
+    });
+  }
+
+  // Rex Power-Ups / backward compatibility:
+  playBlast(type = 'B') {
+    if (this.sfxMuted) return;
+    this._initContext();
+    if (!this.ctx) return;
+
+    if (type === 'R') {
+      // Rainbow sweep: fast rising arpeggio across the scale
+      [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1318.5].forEach((f, i) => {
+        setTimeout(() => this._playTone(f, 'square', 0.1, 0.12), i * 45);
+      });
+      this._playNoise(0.2, 0.18, 1200);
+    } else if (type === 'H' || type === 'V') {
+      // Laser zap
+      this._playTone(1400, 'sawtooth', 0.22, 0.14, 180);
+      this._playNoise(0.12, 0.16, 2400);
+    } else {
+      // Bomb boom
+      this._playNoise(0.32, 0.34, 700);
+      this._playTone(120, 'sawtooth', 0.3, 0.22, 38);
+      setTimeout(() => this._playTone(660, 'square', 0.08, 0.1, 990), 60);
+    }
+  }
+
+  // Rex hands out a special block
+  playGift() {
+    if (this.sfxMuted) return;
+    [783.99, 987.77, 1174.66, 1567.98].forEach((f, i) => {
+      setTimeout(() => this._playTone(f, 'triangle', 0.14, 0.15), i * 70);
+    });
+  }
+
+  playLevelUp() {
+    if (this.sfxMuted) return;
+    const jingle = [440, 554.37, 659.25, 880, 659.25, 1046.50];
+    const delays = [0, 70, 140, 210, 290, 360];
+    jingle.forEach((f, i) => {
+      setTimeout(() => {
+        this._playTone(f, 'square', i === jingle.length - 1 ? 0.25 : 0.09, 0.12);
+      }, delays[i]);
+    });
+  }
+
   playGameOver() {
-    if (this.muted) return;
-    const notes = [330, 311.13, 293.66, 261.63];
+    if (this.sfxMuted) return;
+    const notes = [392.00, 369.99, 349.23, 329.63, 261.63];
     notes.forEach((f, i) => {
       setTimeout(() => {
-        this._playTone(f, 'sawtooth', 0.22, 0.16);
-      }, i * 140);
+        this._playTone(f, 'sawtooth', i === 4 ? 0.45 : 0.2, 0.14);
+      }, i * 150);
     });
   }
 }
@@ -1545,12 +2958,23 @@ class SoundEngine {
 // Global sound instance
 window.sound = new SoundEngine();
 
+// Auto-unlock audio on first user gesture anywhere in the document
+['click', 'touchstart', 'keydown'].forEach(evt => {
+  window.addEventListener(evt, function _autoUnlock() {
+    if (window.sound) {
+      window.sound.unlockAudio();
+    }
+    window.removeEventListener(evt, _autoUnlock);
+  }, { once: true, passive: true });
+});
+
 
 /* ====================================================
    TETRIS CORE GAME LOGIC
    ==================================================== */
 /* =============================================
    game.js — Tetris Core Engine (Pixel RPG Edition)
+   Featuring Classic Mode & Rex Fever / Ultimate Mode
    ============================================= */
 
 const BOARD_WIDTH  = 10;
@@ -1573,7 +2997,8 @@ const PIECE_NAMES = Object.keys(TETROMINOES);
 const SCORE_TABLE = { 1: 100, 2: 300, 3: 500, 4: 800 };
 
 class TetrisGame {
-  constructor() {
+  constructor(mode = 'classic') {
+    this.mode = mode === 'power' ? 'power' : 'classic';
     this.reset();
   }
 
@@ -1594,6 +3019,15 @@ class TetrisGame {
     this.isClearing    = false;
     this.lastAction    = null;
 
+    // Rex Fever / Ultimate Mode properties
+    // In power mode, start with 100% gauge so player can test & enjoy Rex Ultimate immediately!
+    this.feverGauge        = this.mode === 'power' ? 100 : 0;
+    this.isFever           = false;   // whether Fever Frenzy is active
+    this.feverDurationMs   = 15000;   // 15 seconds duration
+    this.feverRemainingMs  = 0;
+    this.lastFeverTick     = 0;
+    this.feverCount        = 0;
+
     this.nextPiece     = this._createPiece(this._nextFromBag());
     this._spawnPiece();
   }
@@ -1605,23 +3039,45 @@ class TetrisGame {
     return this.bag.pop();
   }
 
-  _createPiece(name) {
+  _createPiece(name, baseShape = null) {
+    if (name === 'STAR') {
+      return {
+        name: 'STAR',
+        baseShape: [[1]],
+        shape: [[1]],
+        color: '#FFD700',
+        light: '#FFF9C4',
+        dark:  '#F57F17',
+        isGold: true,
+        x: 4,
+        y: 0,
+      };
+    }
     const t = TETROMINOES[name];
+    const shape = (baseShape || t.shape).map(row => [...row]);
     return {
       name,
-      shape: t.shape.map(row => [...row]),
+      baseShape: shape.map(row => [...row]),
+      shape,
       color: t.color,
       light: t.light,
       dark:  t.dark,
-      x: Math.floor((BOARD_WIDTH - t.shape[0].length) / 2),
+      isGold: false,
+      x: Math.floor((BOARD_WIDTH - shape[0].length) / 2),
       y: 0,
     };
   }
 
   _spawnPiece() {
     this.currentPiece = this.nextPiece;
-    this.nextPiece    = this._createPiece(this._nextFromBag());
-    this.canHold      = true;
+    let nextName;
+    if (this.mode === 'power' && this.isFever && Math.random() < 0.3) {
+      nextName = 'STAR';
+    } else {
+      nextName = this._nextFromBag();
+    }
+    this.nextPiece = this._createPiece(nextName);
+    this.canHold   = true;
 
     if (this._collides(this.currentPiece)) {
       this.gameOver = true;
@@ -1630,21 +3086,87 @@ class TetrisGame {
     }
   }
 
+  // Add percentage to Rex Fever Gauge (Power mode only)
+  addFever(amt) {
+    if (this.mode !== 'power' || this.isFever || this.gameOver || this.paused) return;
+    const prev = this.feverGauge;
+    this.feverGauge = Math.min(100, Math.max(0, Math.round(this.feverGauge + amt)));
+    if (this.feverGauge >= 100 && prev < 100) {
+      if (window.sound && window.sound.playFeverReady) window.sound.playFeverReady();
+      if (window.onFeverReady) window.onFeverReady();
+    }
+  }
+
+  // Activate Rex Ultimate (Stomp + 15s Fever Frenzy)
+  activateUltimate() {
+    if (this.mode !== 'power' || this.gameOver || this.paused) return false;
+    if (this.feverGauge < 100 || this.isFever) return false;
+
+    // 1. REX STOMP: Wipe bottom 4 rows that have blocks (or bottom 4 rows)
+    const targetRows = [];
+    for (let r = BOARD_HEIGHT - 1; r >= 0 && targetRows.length < 4; r--) {
+      if (this.board[r].some(c => c !== null)) {
+        targetRows.push(r);
+      }
+    }
+    if (targetRows.length === 0) {
+      for (let r = BOARD_HEIGHT - 4; r < BOARD_HEIGHT; r++) {
+        targetRows.push(r);
+      }
+    }
+
+    targetRows.sort((a, b) => b - a).forEach(row => {
+      this.board.splice(row, 1);
+    });
+    for (let i = 0; i < targetRows.length; i++) {
+      this.board.unshift(Array(BOARD_WIDTH).fill(null));
+    }
+
+    // Safety: ensure current falling piece does not collide with shifted blocks
+    if (this.currentPiece) {
+      while (this._collides(this.currentPiece) && this.currentPiece.y > 0) {
+        this.currentPiece.y--;
+      }
+    }
+
+    const stompBonus = 2500 * this.level;
+    this.score += stompBonus;
+    this.feverCount++;
+
+    // 2. Start 15s Fever Mode
+    this.isFever = true;
+    this.feverRemainingMs = this.feverDurationMs;
+    this.lastFeverTick = performance.now();
+
+    if (window.sound && window.sound.playRexUltimate) {
+      window.sound.playRexUltimate();
+    }
+    if (window.onRexUltimate) {
+      window.onRexUltimate({ targetRows, stompBonus });
+    }
+    return true;
+  }
+
   hold() {
     if (this.isClearing || this.paused || this.gameOver || !this.canHold) return false;
 
-    const currentName = this.currentPiece.name;
+    const currentName  = this.currentPiece.name;
+    const currentShape = this.currentPiece.baseShape;
     if (this.holdPiece === null) {
-      this.holdPiece = this._createPiece(currentName);
+      this.holdPiece = this._createPiece(currentName, currentShape);
       this._spawnPiece();
     } else {
-      const holdName = this.holdPiece.name;
-      this.holdPiece = this._createPiece(currentName);
-      this.currentPiece = this._createPiece(holdName);
+      const holdName  = this.holdPiece.name;
+      const holdShape = this.holdPiece.baseShape;
+      this.holdPiece = this._createPiece(currentName, currentShape);
+      this.currentPiece = this._createPiece(holdName, holdShape);
     }
 
     this.canHold = false;
-    if (window.sound) window.sound.playRotate();
+    if (window.sound) {
+      if (window.sound.playHold) window.sound.playHold();
+      else if (window.sound.playRotate) window.sound.playRotate();
+    }
     return true;
   }
 
@@ -1694,6 +3216,9 @@ class TetrisGame {
 
   rotatePiece() {
     if (this.isClearing || this.paused || this.gameOver) return false;
+    // 1x1 STAR does not need rotation
+    if (this.currentPiece.name === 'STAR') return true;
+
     const src   = this.currentPiece.shape;
     const rows  = src.length;
     const cols  = src[0].length;
@@ -1737,7 +3262,8 @@ class TetrisGame {
     const pieceData = {
       color: this.currentPiece.color,
       light: this.currentPiece.light,
-      dark:  this.currentPiece.dark
+      dark:  this.currentPiece.dark,
+      isGold: !!this.currentPiece.isGold
     };
 
     for (let py = 0; py < shape.length; py++) {
@@ -1752,6 +3278,11 @@ class TetrisGame {
         }
         this.board[ny][x + px] = pieceData;
       }
+    }
+
+    // In power mode: locking a piece grants +2% fever gauge
+    if (this.mode === 'power' && !this.isFever) {
+      this.addFever(2);
     }
 
     const fullRows = [];
@@ -1774,10 +3305,9 @@ class TetrisGame {
         combo: this.combo
       };
 
-      if (window.sound) window.sound.playClear(fullRows.length);
-      // Trigger T-Rex celebration & dialogue!
+      if (window.sound) window.sound.playClear(fullRows.length, this.combo);
       if (window.onTrexCheer) {
-        window.onTrexCheer({ lines: fullRows.length, combo: this.combo });
+        window.onTrexCheer({ lines: fullRows.length, combo: this.combo, isFever: this.isFever });
       }
     } else {
       this.combo = -1;
@@ -1793,25 +3323,70 @@ class TetrisGame {
 
     this.clearingLines.sort((a, b) => b - a).forEach(row => {
       this.board.splice(row, 1);
-      this.board.unshift(Array(BOARD_WIDTH).fill(null));
     });
+    for (let i = 0; i < cleared; i++) {
+      this.board.unshift(Array(BOARD_WIDTH).fill(null));
+    }
 
     let gained = SCORE_TABLE[cleared] * this.level;
     if (this.combo > 0) {
       gained += this.combo * 50 * this.level;
     }
 
+    // 3x Score during Fever Frenzy
+    if (this.mode === 'power' && this.isFever) {
+      gained *= 3;
+      if (window.sound && window.sound.playFeverBonus) {
+        window.sound.playFeverBonus();
+      }
+    }
+
+    // Gauge charging in power mode
+    if (this.mode === 'power' && !this.isFever) {
+      const feverGains = { 1: 12, 2: 26, 3: 45, 4: 70 };
+      let addAmt = feverGains[cleared] || (cleared * 15);
+      if (this.combo > 0) addAmt += this.combo * 8;
+      this.addFever(addAmt);
+    }
+
     this.score += gained;
     this.lines += cleared;
-    this.level  = Math.floor(this.lines / 10) + 1;
+    const newLevel = Math.floor(this.lines / 10) + 1;
+    if (newLevel > this.level) {
+      this.level = newLevel;
+      if (window.sound && window.sound.playLevelUp) {
+        setTimeout(() => window.sound.playLevelUp(), 180);
+      }
+    } else {
+      this.level = newLevel;
+    }
 
     this.clearingLines = [];
     this.isClearing = false;
     this._spawnPiece();
   }
 
+  updateFever(now = performance.now()) {
+    if (this.mode !== 'power' || !this.isFever || this.gameOver || this.paused) return;
+    if (!this.lastFeverTick) this.lastFeverTick = now;
+    const dt = now - this.lastFeverTick;
+    this.lastFeverTick = now;
+    this.feverRemainingMs = Math.max(0, this.feverRemainingMs - dt);
+    this.feverGauge = Math.max(0, Math.round((this.feverRemainingMs / this.feverDurationMs) * 100));
+
+    if (this.feverRemainingMs <= 0) {
+      this.isFever = false;
+      this.feverGauge = 0;
+      this.lastFeverTick = 0;
+      if (window.sound && window.sound.playFeverEnd) window.sound.playFeverEnd();
+      if (window.onFeverEnd) window.onFeverEnd();
+    }
+  }
+
   tick(now = performance.now()) {
     if (this.gameOver || this.paused) return;
+
+    this.updateFever(now);
 
     if (this.isClearing) {
       if (now - this.clearStartTime >= this.clearDuration) {
@@ -1824,6 +3399,9 @@ class TetrisGame {
   }
 
   getDropInterval() {
+    if (this.mode === 'power' && this.isFever) {
+      return Math.max(220, 550 - (this.level - 1) * 30);
+    }
     return Math.max(70, 950 - (this.level - 1) * 85);
   }
 }
@@ -1848,6 +3426,12 @@ let currentScreen  = 'start';
 let prevScreen     = 'start';
 let particles      = [];
 let selectedRating = 5;
+
+// Game modes: 'classic' (normal) · 'power' (Rex Fever with Rage gauge & 3x score frenzy)
+const MODE_LABELS = { classic: 'CLASSIC', power: 'REX FEVER' };
+let currentMode = 'classic';
+let leaderboardMode = 'classic';
+let fxClearStamp = 0;
 
 // Screen Shake FX
 let shakeDuration  = 0;
@@ -1921,8 +3505,52 @@ function goBack() {
 }
 
 function openLeaderboard() {
+  leaderboardMode = currentMode;
   showScreen('leaderboard');
+  syncLeaderboardTabs();
   loadLeaderboard();
+}
+
+function setLeaderboardTab(mode) {
+  leaderboardMode = mode === 'power' ? 'power' : 'classic';
+  if (window.sound) window.sound.playClick();
+  syncLeaderboardTabs();
+  loadLeaderboard();
+}
+
+function syncLeaderboardTabs() {
+  ['classic', 'power'].forEach(m => {
+    const tab = getElement(`lb-tab-${m}`);
+    if (!tab) return;
+    const on = leaderboardMode === m;
+    tab.classList.toggle('active', on);
+    tab.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+}
+
+// ── Game Mode Selection (Classic / Rex Power-Ups) ──
+function setGameMode(mode, silent = false) {
+  currentMode = mode === 'power' ? 'power' : 'classic';
+  setSafeStorage('tetris-mode', currentMode);
+  document.body.classList.toggle('mode-power', currentMode === 'power');
+
+  ['classic', 'power'].forEach(m => {
+    const btn = getElement(`mode-btn-${m}`);
+    if (!btn) return;
+    const on = currentMode === m;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+
+  const legend = getElement('power-legend');
+  if (legend) legend.hidden = currentMode !== 'power';
+  if (currentMode === 'power') renderLegendIcons();
+
+  const top3Title = getElement('top3-title');
+  if (top3Title) top3Title.textContent = `TOP 3 · ${MODE_LABELS[currentMode]}`;
+
+  if (!silent && window.sound) window.sound.playClick();
+  loadTop3Widget();
 }
 
 function openFeedback() {
@@ -1933,15 +3561,24 @@ function openFeedback() {
 function quitGame() {
   stopLoop();
   showScreen('start');
+  loadTop3Widget();
 }
 
 function toggleMute() {
   if (window.sound) {
-    const isMuted = window.sound.toggleMute();
-    const label = getElement('mute-label');
-    if (label) {
-      label.textContent = isMuted ? '🔇 ปิดเสียง' : '🔊 เปิดเสียง';
-    }
+    window.sound.toggleMute();
+  }
+}
+
+function toggleBgm() {
+  if (window.sound) {
+    window.sound.toggleMusic();
+  }
+}
+
+function switchBgmTrack() {
+  if (window.sound) {
+    window.sound.nextTrack();
   }
 }
 
@@ -1958,18 +3595,277 @@ function showActionBanner(text) {
   }, 1000);
 }
 
-// ── T-Rex Interactive Companion System ───────
+// ── SMOOTH 3D-SHADED RED T-REX MODEL & ANIMATION CONTROLLER ───────
+function get3DTrexSVG() {
+  return `
+  <svg viewBox="0 0 220 220" class="rex-rig" xmlns="http://www.w3.org/2000/svg">
+    <!-- Ground Soft Ambient Shadow -->
+    <ellipse cx="112" cy="198" rx="66" ry="12" fill="rgba(10, 5, 15, 0.42)"/>
+
+    <!-- Whole Animated Character Rig -->
+    <g class="rex-whole" filter="url(#rexDropShadow)">
+
+      <!-- 1. TAIL (Wagging behind with dark crimson stripes) -->
+      <g class="rex-tail">
+        <path d="M 76 164 C 38 174, 12 148, 20 108 C 24 92, 34 114, 48 128 C 58 138, 72 144, 82 148 Z"
+              fill="url(#rexSkinGrad)" stroke="#4A0E0B" stroke-width="2.6" stroke-linejoin="round"/>
+        <!-- Cream Tail Underside -->
+        <path d="M 72 162 C 46 168, 24 148, 24 120 C 30 136, 50 150, 74 154 Z"
+              fill="url(#rexBellyGrad)" opacity="0.9"/>
+        <!-- Tiger Stripes on Tail -->
+        <path d="M 26 116 Q 35 113 37 122" stroke="#6E0A07" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <path d="M 35 130 Q 46 125 48 135" stroke="#6E0A07" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+        <path d="M 49 141 Q 60 135 62 145" stroke="#6E0A07" stroke-width="5" stroke-linecap="round" fill="none"/>
+      </g>
+
+      <!-- 2. BACKPACK (Peeking behind hoodie with Crown logo) -->
+      <g class="rex-backpack">
+        <rect x="50" y="102" width="34" height="46" rx="8" transform="rotate(-12 68 124)"
+              fill="url(#rexHoodieGrad)" stroke="#141418" stroke-width="2.5"/>
+        <path d="M 57 124 L 59 116 L 63 120 L 67 115 L 70 124 Z"
+              fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/>
+      </g>
+
+      <!-- 3. FAR RIGHT LEG -->
+      <g class="rex-leg-r">
+        <ellipse cx="148" cy="166" rx="22" ry="18" transform="rotate(12 148 166)"
+                 fill="url(#rexLimbGrad)" stroke="#4A0E0B" stroke-width="2.5"/>
+        <ellipse cx="156" cy="182" rx="18" ry="11"
+                 fill="url(#rexLimbGrad)" stroke="#4A0E0B" stroke-width="2.5"/>
+        <!-- 3 Glossy Black Claws -->
+        <path d="M 146 184 Q 144 195 151 194 Q 154 188 151 183 Z" fill="url(#rexClawGrad)"/>
+        <path d="M 157 184 Q 157 196 164 194 Q 166 188 162 183 Z" fill="url(#rexClawGrad)"/>
+        <path d="M 167 182 Q 169 193 174 190 Q 175 185 171 180 Z" fill="url(#rexClawGrad)"/>
+      </g>
+
+      <!-- 4. TORSO, CREAM BELLY & BLACK HOODIE JACKET -->
+      <g class="rex-torso">
+        <!-- Chubby Red Torso Base -->
+        <path d="M 70 120 C 64 152, 74 184, 114 184 C 148 184, 156 156, 144 120 Z"
+              fill="url(#rexSkinGrad)" stroke="#4A0E0B" stroke-width="2.5"/>
+
+        <!-- Warm Cream Belly & Neck -->
+        <path d="M 98 104 C 122 104, 138 124, 136 156 C 134 176, 118 182, 102 176 C 90 170, 92 132, 98 104 Z"
+              fill="url(#rexBellyGrad)"/>
+
+        <!-- Silver Crown Pendant Necklace -->
+        <path d="M 102 115 Q 118 128 131 114" fill="none" stroke="#222" stroke-width="2"/>
+        <polygon points="114,128 115,121 118,125 121,120 124,125 127,121 128,128"
+                 fill="#E2E8F0" stroke="#475569" stroke-width="1.2"/>
+
+        <!-- Black Zip-Up Hoodie Body -->
+        <path d="M 68 112 C 62 134, 64 162, 74 172 C 86 160, 100 156, 108 158 L 112 116 C 96 112, 80 108, 68 112 Z"
+              fill="url(#rexHoodieGrad)" stroke="#111115" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M 132 114 C 144 124, 152 146, 146 164 C 138 162, 130 156, 126 148 L 124 116 Z"
+              fill="url(#rexHoodieGrad)" stroke="#111115" stroke-width="2.5" stroke-linejoin="round"/>
+
+        <!-- Fluffy Black Hood Collar around Neck -->
+        <path d="M 62 104 C 58 92, 76 86, 98 96 C 114 104, 132 104, 140 98 C 146 108, 138 120, 114 120 C 86 120, 66 116, 62 104 Z"
+              fill="url(#rexSleeveGrad)" stroke="#111115" stroke-width="2.5"/>
+
+        <!-- Hoodie White Drawstrings -->
+        <g class="rex-strings">
+          <path d="M 111 118 Q 108 134 110 146" fill="none" stroke="#F8FAFC" stroke-width="3" stroke-linecap="round"/>
+          <path d="M 131 118 Q 135 133 133 144" fill="none" stroke="#F8FAFC" stroke-width="3" stroke-linecap="round"/>
+        </g>
+      </g>
+
+      <!-- 5. FOREGROUND LEFT CHUBBY LEG & BIG CLAWS -->
+      <g class="rex-leg-l">
+        <path d="M 74 152 C 66 138, 92 128, 108 144 C 122 158, 122 178, 108 186 C 88 192, 78 172, 74 152 Z"
+              fill="url(#rexSkinGrad)" stroke="#4A0E0B" stroke-width="2.5"/>
+        <!-- Foot Pad -->
+        <ellipse cx="105" cy="186" rx="22" ry="12"
+                 fill="url(#rexLimbGrad)" stroke="#4A0E0B" stroke-width="2.5"/>
+        <!-- 3 Big Glossy Black Claws -->
+        <path d="M 88 186 C 84 198, 94 202, 97 192 C 98 187, 93 184, 88 186 Z" fill="url(#rexClawGrad)"/>
+        <path d="M 102 187 C 100 201, 111 203, 113 192 C 113 187, 107 185, 102 187 Z" fill="url(#rexClawGrad)"/>
+        <path d="M 116 186 C 116 199, 126 200, 126 190 C 126 185, 121 183, 116 186 Z" fill="url(#rexClawGrad)"/>
+      </g>
+
+      <!-- 6. RIGHT ARM (Far Side) -->
+      <g class="rex-arm-r">
+        <path d="M 134 126 C 148 128, 156 138, 150 148 C 142 152, 132 144, 130 134 Z"
+              fill="url(#rexLimbGrad)" stroke="#4A0E0B" stroke-width="2"/>
+        <circle cx="148" cy="149" r="3" fill="url(#rexClawGrad)"/>
+        <circle cx="153" cy="145" r="3" fill="url(#rexClawGrad)"/>
+        <circle cx="154" cy="139" r="2.5" fill="url(#rexClawGrad)"/>
+      </g>
+
+      <!-- 7. LEFT ARM IN HOODIE SLEEVE WITH CROWN LOGO -->
+      <g class="rex-arm-l">
+        <!-- Hoodie Sleeve -->
+        <path d="M 82 114 C 96 112, 114 122, 118 136 L 102 146 C 90 138, 80 128, 82 114 Z"
+              fill="url(#rexSleeveGrad)" stroke="#111115" stroke-width="2.5" stroke-linejoin="round"/>
+        <!-- White Crown Emblem on Sleeve -->
+        <path d="M 90 128 L 91 121 L 95 125 L 99 120 L 102 125 L 106 121 L 105 128 Z"
+              fill="none" stroke="#F8FAFC" stroke-width="1.8" stroke-linejoin="round"/>
+        <!-- Cute Red Dino Hand & 3 Black Claws -->
+        <path d="M 114 134 C 126 136, 132 146, 124 154 C 116 156, 108 148, 106 142 Z"
+              fill="url(#rexSkinGrad)" stroke="#4A0E0B" stroke-width="2"/>
+        <path d="M 120 153 Q 122 161 126 157 Q 126 152 122 151 Z" fill="url(#rexClawGrad)"/>
+        <path d="M 125 149 Q 129 156 131 151 Q 130 147 126 147 Z" fill="url(#rexClawGrad)"/>
+        <path d="M 127 143 Q 132 148 133 144 Q 131 140 127 141 Z" fill="url(#rexClawGrad)"/>
+      </g>
+
+      <!-- 8. BIG EXPRESSIVE 3D HEAD & NATURAL SUNGLASSES ON BROW -->
+      <g class="rex-head">
+        <!-- Dorsal Head Spikes -->
+        <path d="M 74 68 L 62 64 L 70 78 Z" fill="#B71C1C" stroke="#4A0E0B" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M 84 52 L 74 44 L 80 62 Z" fill="#C62828" stroke="#4A0E0B" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M 98 40 L 92 31 L 94 46 Z" fill="#D32F2F" stroke="#4A0E0B" stroke-width="2" stroke-linejoin="round"/>
+
+        <!-- Main Sculpted 3D Red Cranium & Snout -->
+        <path d="M 76 82 C 70 54, 94 32, 124 36 C 146 38, 158 50, 174 58 C 194 68, 196 92, 180 104 C 164 116, 132 118, 106 114 C 84 110, 78 96, 76 82 Z"
+              fill="url(#rexSkinGrad)" stroke="#4A0E0B" stroke-width="2.6" stroke-linejoin="round"/>
+
+        <!-- Cream Lower Jaw & Cheek (Matching Reference Photo!) -->
+        <path d="M 82 92 C 88 84, 102 84, 114 92 C 134 104, 162 106, 182 96 C 176 112, 152 120, 122 116 C 96 113, 82 104, 82 92 Z"
+              fill="url(#rexBellyGrad)"/>
+
+        <!-- Subtle Skin Highlights -->
+        <circle cx="92" cy="76" r="3" fill="#FF8A80" opacity="0.45"/>
+        <circle cx="86" cy="83" r="2" fill="#FF8A80" opacity="0.4"/>
+        <circle cx="156" cy="72" r="3.5" fill="#FF8A80" opacity="0.35"/>
+        <circle cx="166" cy="78" r="2.2" fill="#FF8A80" opacity="0.35"/>
+
+        <!-- Sculpted Nostril -->
+        <ellipse cx="174" cy="74" rx="3.5" ry="5" transform="rotate(-18 174 74)" fill="#4A0E0B"/>
+        <ellipse cx="173" cy="73" rx="1.5" ry="2.5" transform="rotate(-18 173 73)" fill="#1A0504"/>
+
+        <!-- A) SMUG GRIN MOUTH WITH CUTE WHITE TEETH (Default) -->
+        <g class="rex-mouth-smile">
+          <polygon points="118,91 121,99 125,93" fill="#FFFFFF" stroke="#4A0E0B" stroke-width="1.3" stroke-linejoin="round"/>
+          <polygon points="129,95 132,103 136,97" fill="#FFFFFF" stroke="#4A0E0B" stroke-width="1.3" stroke-linejoin="round"/>
+          <polygon points="141,98 144,106 148,99" fill="#FFFFFF" stroke="#4A0E0B" stroke-width="1.3" stroke-linejoin="round"/>
+          <polygon points="154,99 157,106 161,99" fill="#FFFFFF" stroke="#4A0E0B" stroke-width="1.3" stroke-linejoin="round"/>
+          <polygon points="167,98 170,104 173,97" fill="#FFFFFF" stroke="#4A0E0B" stroke-width="1.3" stroke-linejoin="round"/>
+          <!-- Smile Line & Dimple -->
+          <path d="M 106 82 C 118 96, 152 104, 182 95" fill="none" stroke="#3E1408" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M 102 84 Q 106 78 110 81" fill="none" stroke="#3E1408" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+
+        <!-- B) ROARING OPEN MOUTH (Visible in pose-roar) -->
+        <g class="rex-mouth-roar">
+          <path d="M 110 84 C 134 86, 164 88, 180 86 C 182 106, 158 118, 128 112 C 112 108, 108 94, 110 84 Z"
+                fill="#5C0A0A" stroke="#3E1408" stroke-width="2.8" stroke-linejoin="round"/>
+          <!-- Pink Tongue -->
+          <path d="M 122 102 Q 146 94 166 106 Q 146 116 122 108 Z" fill="#FF80AB"/>
+          <polygon points="118,86 121,95 125,87" fill="#FFFFFF"/>
+          <polygon points="131,87 134,96 138,88" fill="#FFFFFF"/>
+          <polygon points="145,88 148,96 152,88" fill="#FFFFFF"/>
+          <polygon points="159,88 162,95 166,87" fill="#FFFFFF"/>
+          <polygon points="126,110 129,103 133,111" fill="#FFFFFF"/>
+          <polygon points="142,112 145,104 149,112" fill="#FFFFFF"/>
+          <polygon points="156,110 159,103 163,109" fill="#FFFFFF"/>
+        </g>
+
+        <!-- C) BIG EXPRESSIVE 3D BROWN EYE -->
+        <g class="rex-eye-open">
+          <ellipse cx="118" cy="74" rx="14" ry="12" fill="#FFFDF9" stroke="#2D1206" stroke-width="2.5"/>
+          <circle cx="119" cy="74" r="10" fill="url(#rexIrisGrad)"/>
+          <circle cx="120" cy="74" r="5.5" fill="#120702"/>
+          <circle cx="115" cy="69" r="3.2" fill="#FFFFFF"/>
+          <circle cx="124" cy="78" r="1.6" fill="#FFFFFF"/>
+          <path class="rex-eyelid" d="M 104 74 C 104 60, 132 60, 132 74 C 132 85, 104 85, 104 74 Z"
+                fill="url(#rexSkinGrad)" stroke="#3E1408" stroke-width="2"/>
+        </g>
+
+        <!-- D) CHEEKY WINK EYE (Visible in pose-wink) -->
+        <g class="rex-eye-wink">
+          <path d="M 104 74 Q 118 60 132 73" fill="none" stroke="#2D1206" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M 118 67 L 126 61" fill="none" stroke="#2D1206" stroke-width="3" stroke-linecap="round"/>
+        </g>
+
+        <!-- Dino Brow Ridge -->
+        <path d="M 96 65 C 108 55, 126 57, 135 66" fill="none" stroke="#6E0A07" stroke-width="4.5" stroke-linecap="round"/>
+
+        <!-- 9. ICONIC BLACK WAYFARER SUNGLASSES (Tilted Naturally on Forehead / Brow) -->
+        <g class="rex-sunglasses" transform="rotate(7 124 50)">
+          <!-- Temple Arm tapering back over ear -->
+          <path d="M 96 46 C 84 51, 74 55, 66 60" stroke="#121216" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+          <!-- Left Lens Frame -->
+          <rect x="94" y="38" width="28" height="20" rx="4"
+                fill="url(#rexLensGrad)" stroke="#121216" stroke-width="3.6"/>
+          <!-- Right Lens Frame -->
+          <rect x="126" y="42" width="28" height="20" rx="4"
+                fill="url(#rexLensGrad)" stroke="#121216" stroke-width="3.6"/>
+          <!-- Curved Bridge connecting lenses -->
+          <path d="M 122 46 Q 125 43 126 46" stroke="#121216" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+          <!-- Diagonal Sky Reflection Glint on Lenses -->
+          <path d="M 97 41 L 115 41 L 105 56 L 97 53 Z" fill="url(#rexGlintGrad)" opacity="0.85"/>
+          <path d="M 129 45 L 147 45 L 137 60 L 129 57 Z" fill="url(#rexGlintGrad)" opacity="0.85"/>
+          <!-- Silver Rivets on Temples -->
+          <circle cx="95" cy="46" r="1.4" fill="#E2E8F0"/>
+          <circle cx="153" cy="50" r="1.4" fill="#E2E8F0"/>
+        </g>
+      </g>
+
+      <!-- 10. SPECIAL POSE PARTICLE EFFECTS -->
+      <g class="fx-cool">
+        <path d="M 38 66 L 42 54 L 46 66 L 58 70 L 46 74 L 42 86 L 38 74 L 26 70 Z" fill="#FFE066"/>
+        <path d="M 192 42 L 195 34 L 198 42 L 206 45 L 198 48 L 195 56 L 192 48 L 184 45 Z" fill="#FFFFFF"/>
+        <circle cx="188" cy="118" r="4" fill="#FFE066"/>
+      </g>
+
+      <g class="fx-dance">
+        <text x="24" y="72" font-size="28" font-weight="900" fill="#FFE066" stroke="#35180B" stroke-width="1.5">♪</text>
+        <text x="182" y="54" font-size="30" font-weight="900" fill="#4FC3F7" stroke="#35180B" stroke-width="1.5">♫</text>
+        <text x="186" y="125" font-size="24" font-weight="900" fill="#FF80AB" stroke="#35180B" stroke-width="1.5">♬</text>
+      </g>
+
+      <g class="fx-roar">
+        <path d="M 188 78 L 212 68 L 198 86 L 216 94 L 190 98 L 204 112 L 182 104 Z"
+              fill="#FFCA28" stroke="#E53935" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M 32 82 L 14 70 L 28 94 L 12 104 L 34 106 Z"
+              fill="#FFCA28" stroke="#E53935" stroke-width="2" stroke-linejoin="round"/>
+      </g>
+
+      <g class="fx-wink">
+        <text x="180" y="62" font-size="26">✨</text>
+        <text x="26" y="78" font-size="24">⚡</text>
+      </g>
+
+    </g>
+  </svg>`;
+}
+
+// ── T-Rex Interactive Companion & Autonomous Motion ───────
+const TREX_POSES = ['cool', 'dance', 'roar', 'wink'];
+
 const TREX_QUOTES = {
+  poseQuotes: {
+    cool: [
+      "ถึงมือป๋าจะสั้น แต่เล่น Tetris ตึงจัดนะบอกเลย! 🕶️",
+      "แว่นดำเสื้อฮู้ด โหมดบอสพร้อมลุยแล้ววัยรุ่น!",
+      "หล่อเท่ทะลุจูราสสิก พร้อมลุยยัง! 🦖"
+    ],
+    dance: [
+      "เพลงมันส์ขนาดนี้ โยกตามป๋าหน่อยเร๊วว! 🕺🎵",
+      "สเต็ปเท้าไฟ ไดโนเสาร์สายแดนซ์ตัวตึง!",
+      "จังหวะนี้บล็อกลงตรงเป๊ะทุกช่องแน่นอน!"
+    ],
+    roar: [
+      "โฮกกกกกรรร!! พลังทำลายล้าง 4 แถวรวด!! 🔥🦖",
+      "คำรามขู่บล็อกให้เรียงสวยๆ ไปเลย!",
+      "Small but Fierce! ตัวเล็กแต่ใจใหญ่เว้ย!"
+    ],
+    wink: [
+      "ขยิบตาทีเดียว คะแนนพุ่งกระฉูดนะบอกก่อน 😜✨",
+      "มองตาก็รู้ใจ วางบล็อกไหนดีน้าา~",
+      "จิ้มป๋าได้ไม่กัด แต่อย่าวางบล็อกผิดช่องนะ 555!"
+    ]
+  },
   cheerSingle: [
-    "สวยพี่สวย! +100",
+    "สวยพี่สวย! +100 😜",
     "สเต็ปนี้ได้เรื่องว่ะ!",
     "มือสั้นแต่แต้มยาวนะ!",
     "ไปต่อวัยรุ่น อย่าแผ่ว!"
   ],
   cheerMulti: [
-    "สองแถวติด! ป๋าชอบบ!",
-    "สามแถวรวด! โหดจัด!",
-    "คอมโบไฟลุกแล้วเจ้าหนู!"
+    "สองแถวติด! ป๋าขอเต้นฉลอง! 🕺",
+    "สามแถวรวด! โหดจัดปลัดบอก!",
+    "คอมโบไฟลุกแล้วเจ้าหนู! 🎵"
   ],
   cheerTetris: [
     "โฮกกกรร! TETRIS แตก!! 🦖🔥",
@@ -1977,30 +3873,69 @@ const TREX_QUOTES = {
     "สุดจริงตัวตึงแห่งยุคจูราสสิก!"
   ],
   poke: [
-    "อย่าจิ้มเยอะ เดี๋ยวแว่นป๋าเบี้ยว!",
-    "มองกระดานสิ มองหน้าป๋าทำไม!",
-    "จิ้มแล้วแต้มไม่เพิ่มนะบอกก่อน 555",
-    "มือป๋าสั้น แต่วางบล็อกแม่นนะ!",
-    "สู้เขาสิวะ เจ้ามนุษย์!"
+    "อย่าจิ้มเยอะ เดี๋ยวแว่นป๋าเบี้ยว! 🕶️",
+    "มองกระดานสิ มองหน้าป๋าทำไม! 😜",
+    "จิ้มปุ๊บ เต้นปั๊บ จัดให้วัยรุ่น! 🕺",
+    "โฮกกก! เติมพลังไดโนเสาร์ให้แล้ว ลุยต่อ! 🔥",
+    "มือป๋าสั้น แต่วางบล็อกแม่นนะ!"
   ],
   gameOver: [
     "ไดโนเสาร์ยังสูญพันธุ์ได้ นายเริ่มใหม่ได้เสมอ!",
-    "มือสั่นเหรอวัยรุ่น? มาอีกรอบดิ๊!",
-    "ป๋ายังเชื่อในตัวนายนะ ลุยต่อเลย!"
+    "มือสั่นเหรอวัยรุ่น? กดเริ่มใหม่แล้วมาแก้มือดิ๊!",
+    "ป๋ายังเชื่อในตัวนายนะ กดกลับหน้าหลักหรือลุยต่อเลย!"
   ]
 };
 
 let rexCheerTimer = null;
+let randomMovementTimer = null;
+
+function applyPoseClass(element, poseName) {
+  if (!element) return;
+  TREX_POSES.forEach(p => element.classList.remove(`pose-${p}`));
+  element.classList.add(`pose-${poseName}`);
+}
+
+function initTrexModels() {
+  const svgMarkup = get3DTrexSVG();
+  const startStage = getElement('start-trex-stage');
+  const gameStage  = getElement('companion-svg-wrap');
+  const overStage  = getElement('gameover-trex-stage');
+
+  if (startStage) startStage.innerHTML = svgMarkup;
+  if (gameStage)  gameStage.innerHTML  = svgMarkup;
+  if (overStage)  overStage.innerHTML  = svgMarkup;
+}
+
+// Autonomous Random Idle Loop (No Manual Buttons Needed!)
+function startRandomTrexLoop() {
+  clearTimeout(randomMovementTimer);
+  const delay = 3500 + Math.random() * 2500;
+  randomMovementTimer = setTimeout(() => {
+    if (currentScreen === 'start') {
+      const stage = getElement('start-trex-stage');
+      const pool = ['cool', 'cool', 'wink', 'dance', 'wink'];
+      const randomPose = pool[Math.floor(Math.random() * pool.length)];
+      applyPoseClass(stage, randomPose);
+
+      const quotes = TREX_QUOTES.poseQuotes[randomPose] || TREX_QUOTES.poseQuotes.cool;
+      const quoteEl = getElement('start-trex-quote');
+      if (quoteEl && quotes) {
+        quoteEl.textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+      }
+    }
+    startRandomTrexLoop();
+  }, delay);
+}
 
 function setTrexPose(poseName, quoteText = null) {
   const spriteWrap = getElement('companion-svg-wrap');
   const speech = getElement('companion-speech');
   if (!spriteWrap) return;
 
-  const svgUse = poseName === 'cheer' ? '#icon-trex-cheer' : '#icon-trex-idle';
-  spriteWrap.innerHTML = `<svg viewBox="0 0 40 40"><use href="${svgUse}"/></svg>`;
+  const mappedPose = TREX_POSES.includes(poseName) ? poseName : (poseName === 'cheer' ? 'dance' : 'cool');
+  applyPoseClass(spriteWrap, mappedPose);
 
-  if (poseName === 'cheer') {
+  if (mappedPose !== 'cool') {
     spriteWrap.classList.add('cheering');
   } else {
     spriteWrap.classList.remove('cheering');
@@ -2011,24 +3946,33 @@ function setTrexPose(poseName, quoteText = null) {
   }
 }
 
-window.onTrexCheer = function({ lines, combo }) {
+window.onTrexCheer = function({ lines, combo, isFever }) {
   let quote = "";
-  if (lines === 4) {
+  let targetPose = "wink";
+
+  if (isFever) {
+    quote = lines === 4 ? "🦖 TETRIS FEVER! แต้มคูณ 3 ทะลุเพดาน!!" : `🔥 FEVER TIME! คอมโบ x3 แต้มพุ่ง!`;
+    targetPose = lines === 4 ? "roar" : "dance";
+  } else if (lines === 4) {
     quote = TREX_QUOTES.cheerTetris[Math.floor(Math.random() * TREX_QUOTES.cheerTetris.length)];
+    targetPose = "roar";
   } else if (combo > 1) {
     quote = `คอมโบ x${combo}! ไฟลุกแล้ว! 🔥`;
+    targetPose = "dance";
   } else if (lines > 1) {
     quote = TREX_QUOTES.cheerMulti[Math.floor(Math.random() * TREX_QUOTES.cheerMulti.length)];
+    targetPose = "dance";
   } else {
     quote = TREX_QUOTES.cheerSingle[Math.floor(Math.random() * TREX_QUOTES.cheerSingle.length)];
+    targetPose = "wink";
   }
 
-  setTrexPose('cheer', quote);
+  setTrexPose(targetPose, quote);
 
   clearTimeout(rexCheerTimer);
   rexCheerTimer = setTimeout(() => {
-    setTrexPose('idle', "สู้ๆ วัยรุ่น!");
-  }, 2400);
+    setTrexPose('cool', "สู้ๆ วัยรุ่น! 🕶️");
+  }, 2600);
 };
 
 window.onTrexGameOver = function() {
@@ -2037,16 +3981,140 @@ window.onTrexGameOver = function() {
   if (gameoverSpeech) {
     gameoverSpeech.textContent = `"${quote}"`;
   }
+  const overStage = getElement('gameover-trex-stage');
+  applyPoseClass(overStage, 'wink');
 };
 
-window.pokeTrex = function() {
-  const quote = TREX_QUOTES.poke[Math.floor(Math.random() * TREX_QUOTES.poke.length)];
-  setTrexPose('cheer', quote);
+window.pokeStartTrex = function() {
+  const stage = getElement('start-trex-stage');
+  const poses = ['wink', 'dance', 'roar', 'cool'];
+  const p = poses[Math.floor(Math.random() * poses.length)];
+  applyPoseClass(stage, p);
+  if (window.sound) window.sound.playRexVoice(p);
+
+  const quotes = TREX_QUOTES.poke;
+  const quoteEl = getElement('start-trex-quote');
+  if (quoteEl) {
+    quoteEl.textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+  }
+
   clearTimeout(rexCheerTimer);
   rexCheerTimer = setTimeout(() => {
-    setTrexPose('idle', "สู้ๆ วัยรุ่น!");
-  }, 2000);
+    applyPoseClass(stage, 'cool');
+  }, 2800);
 };
+
+let inGamePokeIdx = 0;
+window.pokeTrex = function() {
+  inGamePokeIdx = (inGamePokeIdx + 1) % TREX_POSES.length;
+  const pose = TREX_POSES[inGamePokeIdx];
+  const quote = TREX_QUOTES.poke[Math.floor(Math.random() * TREX_QUOTES.poke.length)];
+  if (window.sound) window.sound.playRexVoice(pose);
+  setTrexPose(pose, quote);
+  clearTimeout(rexCheerTimer);
+  rexCheerTimer = setTimeout(() => {
+    setTrexPose('cool', "สู้ๆ วัยรุ่น! 🕶️");
+  }, 2400);
+};
+
+window.pokeGameOverTrex = function() {
+  const overStage = getElement('gameover-trex-stage');
+  const nextPose = TREX_POSES[Math.floor(Math.random() * TREX_POSES.length)];
+  applyPoseClass(overStage, nextPose);
+  if (window.sound) window.sound.playRexVoice(nextPose);
+  window.onTrexGameOver();
+};
+
+// ── Score queries (mode-aware, tolerant of a table without the `mode` column) ──
+function scoreHeaders(cfg, extra = {}) {
+  return { 'apikey': cfg.key, 'Authorization': `Bearer ${cfg.key}`, ...extra };
+}
+
+async function fetchScoreRows(cfg, mode, select, limit) {
+  const base = `${cfg.url}/rest/v1/scores?select=${select}&order=score.desc&limit=${limit}`;
+  try {
+    let res = await fetch(`${base}&mode=eq.${mode}`, { headers: scoreHeaders(cfg) });
+    if (res.ok) return await res.json();
+
+    // 400 = table does not have `mode` column yet:
+    if (res.status === 400) {
+      let fallbackRes = await fetch(`${cfg.url}/rest/v1/scores?select=${select}&order=score.desc&limit=60`, {
+        headers: scoreHeaders(cfg)
+      });
+      if (fallbackRes.ok) {
+        const rows = await fallbackRes.json();
+        if (mode === 'power') {
+          return rows.filter(r => (r.player_name || '').includes('[FEVER]')).slice(0, limit);
+        } else {
+          return rows.filter(r => !(r.player_name || '').includes('[FEVER]')).slice(0, limit);
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('fetchScoreRows warning:', err);
+  }
+  return [];
+}
+
+async function countScoresAbove(cfg, mode, score) {
+  const headers = scoreHeaders(cfg, { 'Range-Unit': 'items', 'Prefer': 'count=exact' });
+  const base = `${cfg.url}/rest/v1/scores?select=id&score=gt.${score}`;
+  try {
+    let res = await fetch(`${base}&mode=eq.${mode}`, { headers });
+    if (!res.ok && res.status === 400) {
+      res = await fetch(base, { headers });
+    }
+    if (res.ok) {
+      const range = res.headers.get('content-range');
+      return range ? parseInt(range.split('/')[1] || '0') : 0;
+    }
+  } catch (err) {}
+  return 0;
+}
+
+// ── TOP 3 LEADERBOARD WIDGET (Start Screen Top-Right) ─────
+async function loadTop3Widget() {
+  const container = getElement('start-top3-list');
+  if (!container) return;
+
+  const cfg = getSupabaseConfig();
+  if (!cfg) {
+    renderTop3HTML([]);
+    return;
+  }
+
+  const mode = currentMode;
+  try {
+    const data = await fetchScoreRows(cfg, mode, 'player_name,score', 3);
+    if (mode === currentMode) renderTop3HTML(data || []);
+  } catch (err) {
+    console.warn('Top 3 fetch failed:', err);
+    if (mode === currentMode) renderTop3HTML([]);
+  }
+}
+
+function renderTop3HTML(items) {
+  const container = getElement('start-top3-list');
+  if (!container) return;
+  const medals = ['🥇', '🥈', '🥉'];
+  const rows = [];
+  for (let i = 0; i < 3; i++) {
+    const item = items[i];
+    let name = 'ยังว่าง';
+    if (item && item.player_name) {
+      const clean = escapeHtml(item.player_name.replace('[FEVER]', '').trim() || 'Anonymous');
+      name = item.player_name.includes('[FEVER]') ? `${clean} 🔥` : clean;
+    }
+    const score = item ? Number(item.score).toLocaleString() : '—';
+    rows.push(`
+      <div class="top3-item rank-${i + 1}${item ? '' : ' empty'}">
+        <span class="medal">${medals[i]}</span>
+        <span class="t3-name" title="${name}">${name}</span>
+        <span class="t3-score mono">${score}</span>
+      </div>`);
+  }
+  container.innerHTML = rows.join('');
+}
 
 // ── Particle System for Line Clear FX ────────
 function spawnLineParticles(row) {
@@ -2083,6 +4151,83 @@ function updateAndDrawParticles(ctx) {
   }
 }
 
+// ── REX FEVER & ULTIMATE ENGINE ──────────────────
+function triggerRexUltimate() {
+  if (currentScreen !== 'game' || !game || game.gameOver || game.paused) return;
+  if (game.mode !== 'power') return;
+
+  if (game.isFever) {
+    showActionBanner('🔥 FEVER ACTIVE! 3x SCORE');
+    return;
+  }
+
+  if (game.feverGauge < 100) {
+    if (window.sound && window.sound.playClick) window.sound.playClick();
+    setTrexPose('wink', `⚡ เกจยังไม่เต็ม (${game.feverGauge}%) ชาร์จอีกนิด!`);
+    clearTimeout(rexCheerTimer);
+    rexCheerTimer = setTimeout(() => {
+      setTrexPose('cool', 'สู้ๆ วัยรุ่น! 🕶️');
+    }, 2000);
+    return;
+  }
+
+  const ok = game.activateUltimate();
+  if (ok) {
+    lastDropTime = performance.now();
+  }
+}
+
+// Event callbacks from game.js
+window.onFeverReady = function() {
+  showActionBanner('💥 REX ULTIMATE READY! [F]');
+  setTrexPose('wink', 'ป๋าพร้อมกระทืบแล้ว! กด [F] หรือปุ่มระเบิดเลย!');
+  clearTimeout(rexCheerTimer);
+  rexCheerTimer = setTimeout(() => {
+    setTrexPose('cool', 'สู้ๆ วัยรุ่น! 🕶️');
+  }, 3500);
+};
+
+window.onRexUltimate = function({ targetRows, stompBonus }) {
+  triggerShake(16, 500);
+
+  // Fiery explosion particles along the wiped bottom rows of the canvas
+  const startY = (BOARD_HEIGHT - 4) * CELL_SIZE;
+  for (let i = 0; i < 50; i++) {
+    particles.push({
+      x: Math.random() * (BOARD_WIDTH * CELL_SIZE),
+      y: startY + Math.random() * (4 * CELL_SIZE),
+      vx: (Math.random() - 0.5) * 12,
+      vy: (Math.random() - 0.5) * 14 - 4,
+      size: Math.random() * 8 + 4,
+      color: ['#FFD54F', '#FF7043', '#FF1744', '#FFEA00', '#FFFFFF'][Math.floor(Math.random() * 5)],
+      alpha: 1
+    });
+  }
+
+  showActionBanner(`💥 REX STOMP! +${stompBonus.toLocaleString()}`);
+  setTrexPose('roar', '💥 REX STOMP! กระทืบล้าง 4 แถวเรียบ เข้าสู่ FEVER!!');
+  clearTimeout(rexCheerTimer);
+  rexCheerTimer = setTimeout(() => {
+    setTrexPose('dance', '🔥 FEVER TIME! คะแนนคูณ 3 สนั่นจอ!!');
+  }, 2200);
+};
+
+window.onFeverEnd = function() {
+  document.body.classList.remove('in-fever');
+  showActionBanner('FEVER FINISHED');
+  setTrexPose('cool', '🔥 หมดเวลาฟีเวอร์แล้ว ปั๊มคะแนนได้แจ่มมากวัยรุ่น!');
+  clearTimeout(rexCheerTimer);
+  rexCheerTimer = setTimeout(() => {
+    setTrexPose('cool', 'สู้ๆ วัยรุ่น! 🕶️');
+  }, 2800);
+};
+
+// Backward-compatibility stubs
+function drawSpecialBlock() {}
+function renderLegendIcons() {}
+window.onSpecialBlast = function() {};
+window.onPowerGift    = function() {};
+
 // ── 16-Bit Pixel Block Drawing ───────────────
 function drawStyledBlock(ctx, x, y, size, colorData, alpha = 1) {
   if (!ctx) return;
@@ -2090,6 +4235,38 @@ function drawStyledBlock(ctx, x, y, size, colorData, alpha = 1) {
   const by = Math.floor(y * size);
   const bw = size;
   const bh = size;
+
+  if (typeof colorData === 'object' && colorData.isGold) {
+    // Shimmering Golden Star Block
+    const now = performance.now();
+    const pulse = Math.sin(now / 140) * 0.15;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#2A1800';
+    ctx.fillRect(bx, by, bw, bh);
+
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(bx + 1, by + 1, bw - 2, bh - 2);
+
+    ctx.fillStyle = '#FFFDE7';
+    ctx.fillRect(bx + 1, by + 1, bw - 2, 3);
+    ctx.fillRect(bx + 1, by + 1, 3, bh - 2);
+
+    ctx.fillStyle = '#E65100';
+    ctx.fillRect(bx + 1, by + bh - 3, bw - 2, 2);
+    ctx.fillRect(bx + bw - 3, by + 1, 2, bh - 2);
+
+    // Center sparkling diamond
+    ctx.fillStyle = `rgba(255, 255, 255, ${0.85 + pulse})`;
+    const cx = bx + Math.floor(bw / 2);
+    const cy = by + Math.floor(bh / 2);
+    ctx.fillRect(cx - 1, cy - 3, 2, 6);
+    ctx.fillRect(cx - 3, cy - 1, 6, 2);
+    ctx.fillRect(cx - 1, cy - 1, 2, 2);
+
+    ctx.restore();
+    return;
+  }
 
   const baseColor  = typeof colorData === 'object' ? colorData.color : colorData;
   const lightColor = typeof colorData === 'object' && colorData.light ? colorData.light : baseColor;
@@ -2203,11 +4380,25 @@ function drawBoard(now) {
     const { shape, x, y, color, light, dark } = game.currentPiece;
     for (let py = 0; py < shape.length; py++) {
       for (let px = 0; px < shape[py].length; px++) {
-        if (shape[py][px]) {
-          drawStyledBlock(ctx, x + px, y + py, CELL_SIZE, { color, light, dark }, 1);
+        const v = shape[py][px];
+        if (v) {
+          const data = { color, light, dark, isGold: !!game.currentPiece.isGold };
+          drawStyledBlock(ctx, x + px, y + py, CELL_SIZE, data, 1);
         }
       }
     }
+  }
+
+  // Active Fever Frenzy Banner Overlay
+  if (game.mode === 'power' && game.isFever) {
+    ctx.save();
+    ctx.font = 'bold 15px "VT323", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#FFEA00';
+    ctx.shadowColor = '#FF3D00';
+    ctx.shadowBlur = 6;
+    ctx.fillText('🔥 REX FEVER: 3x SCORE! 🔥', (BOARD_WIDTH * CELL_SIZE) / 2, 22);
+    ctx.restore();
   }
 
   // Line Clear Sparks & Particles
@@ -2234,8 +4425,10 @@ function renderPiecePreview(canvasId, piece, disabled = false) {
   const alpha = disabled ? 0.35 : 1;
   for (let y = 0; y < shape.length; y++) {
     for (let x = 0; x < shape[y].length; x++) {
-      if (!shape[y][x]) continue;
-      drawStyledBlock(ctx, offX + x, offY + y, cs, { color, light, dark }, alpha);
+      const v = shape[y][x];
+      if (!v) continue;
+      const data = { color, light, dark, isGold: !!piece.isGold };
+      drawStyledBlock(ctx, offX + x, offY + y, cs, data, alpha);
     }
   }
 }
@@ -2255,6 +4448,55 @@ function updateStats() {
 
   const hi = parseInt(getSafeStorage('tetris-hi', '0')) || 0;
   if (elHi) elHi.textContent = hi.toLocaleString();
+
+  // Rex Fever HUD
+  const isPower = game.mode === 'power';
+  const feverCard = getElement('fever-card');
+  const touchFever = getElement('btn-touch-fever');
+  if (feverCard) feverCard.hidden = !isPower;
+  if (touchFever) touchFever.hidden = !isPower;
+
+  if (isPower) {
+    const barInner = getElement('fever-bar-inner');
+    const barLabel = getElement('fever-percent');
+    const actBtn   = getElement('btn-fever-act');
+    const actLabel = getElement('fever-act-label');
+
+    if (game.isFever) {
+      document.body.classList.add('in-fever');
+      const secLeft = Math.max(0, (game.feverRemainingMs / 1000)).toFixed(1);
+      if (barInner) {
+        barInner.style.width = `${game.feverGauge}%`;
+        barInner.className = 'fever-bar-inner active';
+      }
+      if (barLabel) barLabel.textContent = `🔥 ${secLeft}s (3x)`;
+      if (actBtn) actBtn.className = 'btn-fever-act in-fever';
+      if (actLabel) actLabel.textContent = `🔥 FEVER TIME! (3x)`;
+      if (touchFever) touchFever.className = 'btn-action-touch fever-touch-btn ready';
+    } else if (game.feverGauge >= 100) {
+      document.body.classList.remove('in-fever');
+      if (barInner) {
+        barInner.style.width = '100%';
+        barInner.className = 'fever-bar-inner ready';
+      }
+      if (barLabel) barLabel.textContent = 'READY! 💥';
+      if (actBtn) actBtn.className = 'btn-fever-act ready';
+      if (actLabel) actLabel.textContent = '💥 REX ULTIMATE! [F]';
+      if (touchFever) touchFever.className = 'btn-action-touch fever-touch-btn ready';
+    } else {
+      document.body.classList.remove('in-fever');
+      if (barInner) {
+        barInner.style.width = `${game.feverGauge}%`;
+        barInner.className = 'fever-bar-inner';
+      }
+      if (barLabel) barLabel.textContent = `${game.feverGauge}%`;
+      if (actBtn) actBtn.className = 'btn-fever-act';
+      if (actLabel) actLabel.textContent = '⚡ CHARGING...';
+      if (touchFever) touchFever.className = 'btn-action-touch fever-touch-btn';
+    }
+  } else {
+    document.body.classList.remove('in-fever');
+  }
 }
 
 // ── Main Game Loop ────────────────────────────
@@ -2269,8 +4511,14 @@ function startLoop() {
       return;
     }
 
+    // Smoothly tick the fever timer and update HUD WITHOUT moving pieces down
+    if (game.mode === 'power' && game.isFever) {
+      game.updateFever(ts);
+    }
+
     if (game.isClearing) {
-      if (particles.length === 0 && game.clearingLines.length > 0) {
+      if (game.clearStartTime !== fxClearStamp && game.clearingLines.length > 0) {
+        fxClearStamp = game.clearStartTime;
         game.clearingLines.forEach(row => spawnLineParticles(row));
         triggerShake(game.clearingLines.length >= 4 ? 8 : 4, 180);
 
@@ -2327,6 +4575,8 @@ async function onGameOver() {
   if (resLines)  resLines.textContent  = lines;
   if (resRank)   resRank.textContent   = '—';
   if (saveSt)    saveSt.textContent    = '';
+  const resMode = getElement('result-mode');
+  if (resMode)   resMode.textContent   = MODE_LABELS[game.mode] || '';
 
   showScreen('gameover');
 
@@ -2339,31 +4589,32 @@ async function onGameOver() {
   if (saveSt) saveSt.textContent = 'กำลังบันทึกคะแนนสู่ Leaderboard...';
 
   try {
-    await fetch(`${cfg.url}/rest/v1/scores`, {
+    const mode = game.mode;
+    const post = (body) => fetch(`${cfg.url}/rest/v1/scores`, {
       method: 'POST',
-      headers: {
-        'apikey': cfg.key,
-        'Authorization': `Bearer ${cfg.key}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify([{ player_name: playerName, score, level, lines }])
+      headers: scoreHeaders(cfg, { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' }),
+      body: JSON.stringify([body])
     });
 
-    const countRes = await fetch(`${cfg.url}/rest/v1/scores?select=id&score=gt.${score}`, {
-      headers: {
-        'apikey': cfg.key,
-        'Authorization': `Bearer ${cfg.key}`,
-        'Range-Unit': 'items',
-        'Prefer': 'count=exact'
-      }
-    });
+    // Primary: save with `mode` column
+    let res = await post({ player_name: playerName, score, level, lines, mode });
+    
+    // Fallback: If table has no `mode` column yet, save without failing!
+    if (!res.ok && res.status === 400) {
+      const fallbackName = mode === 'power' ? `${playerName} [FEVER]` : playerName;
+      res = await post({ player_name: fallbackName, score, level, lines });
+    }
 
-    const contentRange = countRes.headers.get('content-range');
-    const totalAbove = contentRange ? parseInt(contentRange.split('/')[1] || '0') : 0;
+    if (!res.ok) {
+      if (saveSt) saveSt.textContent = 'บันทึกคะแนนไม่สำเร็จ กรุณาลองใหม่';
+      return;
+    }
+
+    const totalAbove = await countScoresAbove(cfg, mode, score);
 
     if (resRank) resRank.textContent = `#${totalAbove + 1}`;
-    if (saveSt)  saveSt.textContent  = '✓ บันทึกคะแนนขึ้นตารางอันดับสำเร็จ!';
+    if (saveSt)  saveSt.textContent  = `✓ บันทึกคะแนนขึ้นตารางอันดับ ${MODE_LABELS[mode]} สำเร็จ!`;
+    loadTop3Widget();
   } catch (err) {
     console.error('Save score error:', err);
     if (saveSt) saveSt.textContent = 'บันทึกคะแนนไม่สำเร็จ กรุณาลองใหม่';
@@ -2401,16 +4652,24 @@ function startGame() {
 
   particles = [];
   if (typeof TetrisGame === 'function') {
-    game = new TetrisGame();
+    game = new TetrisGame(currentMode);
   } else {
     alert('กำลังโหลดสคริปต์เกม กรุณารอสักครู่');
     return;
   }
 
+  const modeTag = getElement('display-mode-tag');
+  if (modeTag) modeTag.textContent = MODE_LABELS[currentMode];
+
   const overlay = getElement('pause-overlay');
   if (overlay) overlay.classList.add('hidden');
 
-  setTrexPose('idle', "สู้ๆ วัยรุ่น!");
+  if (window.sound) {
+    window.sound.unlockAudio();
+    window.sound.playClick();
+  }
+
+  setTrexPose('cool', "สู้ๆ วัยรุ่น! 🕶️");
   showScreen('game');
   startLoop();
 }
@@ -2428,31 +4687,25 @@ async function loadLeaderboard() {
 
   list.innerHTML = '<div class="loading" style="padding: 24px; text-align: center; color: var(--px-text-muted);">กำลังดึงข้อมูลตารางอันดับ...</div>';
 
+  const mode = leaderboardMode;
   try {
-    const res = await fetch(`${cfg.url}/rest/v1/scores?select=player_name,score,level,lines&order=score.desc&limit=20`, {
-      headers: {
-        'apikey': cfg.key,
-        'Authorization': `Bearer ${cfg.key}`
-      }
-    });
-
-    if (!res.ok) {
-      throw new Error(`HTTP error ${res.status}`);
-    }
-
-    const data = await res.json();
+    const data = await fetchScoreRows(cfg, mode, 'player_name,score,level,lines', 20);
+    if (mode !== leaderboardMode) return;
 
     if (!data || data.length === 0) {
-      list.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--px-text-muted);">ยังไม่มีผู้ติดอันดับ<br>มาเป็นคนแรกกันเถอะ! 🏆</div>';
+      list.innerHTML = `<div class="empty-state" style="padding: 24px; text-align: center; color: var(--px-text-muted);">ยังไม่มีผู้ติดอันดับโหมด ${MODE_LABELS[mode]}<br>มาเป็นคนแรกกันเถอะ! 🏆</div>`;
       return;
     }
 
     list.innerHTML = data.map((row, i) => {
       const rankNum = String(i + 1).padStart(2, '0');
+      const rawName = row.player_name || 'Anonymous';
+      const clean = escapeHtml(rawName.replace('[FEVER]', '').trim() || 'Anonymous');
+      const displayName = rawName.includes('[FEVER]') ? `${clean} 🔥` : clean;
       return `
-        <div class="leaderboard-row ${row.player_name === playerName ? 'highlight' : ''}">
+        <div class="leaderboard-row ${rawName.replace('[FEVER]', '').trim() === playerName ? 'highlight' : ''}">
           <span class="rank ${i < 3 ? 'top' : ''}">#${rankNum}</span>
-          <span class="lb-name">${escapeHtml(row.player_name)}</span>
+          <span class="lb-name">${displayName}</span>
           <span class="lb-score">${(row.score || 0).toLocaleString()}</span>
         </div>
       `;
@@ -2627,6 +4880,7 @@ function setupMobileControls() {
   bindSingleTouch('btn-touch-up', () => game && game.rotatePiece());
   bindSingleTouch('btn-touch-rot', () => game && game.rotatePiece());
   bindSingleTouch('btn-touch-hold', () => game && game.hold());
+  bindSingleTouch('btn-touch-fever', () => triggerRexUltimate());
   bindSingleTouch('btn-touch-drop', () => {
     if (game) {
       const dropDist = game.hardDrop();
@@ -2717,6 +4971,12 @@ document.addEventListener('keydown', (e) => {
       game.rotatePiece();
       break;
 
+    case 'KeyF':
+    case 'KeyE':
+      e.preventDefault();
+      triggerRexUltimate();
+      break;
+
     case 'Space':
       e.preventDefault();
       const dropDist = game.hardDrop();
@@ -2736,20 +4996,39 @@ document.addEventListener('keyup', (e) => {
 });
 
 // ── Global Exports ───────────────────────────
-window.startGame       = startGame;
-window.togglePause     = togglePause;
-window.quitGame        = quitGame;
-window.toggleMute      = toggleMute;
-window.openLeaderboard = openLeaderboard;
-window.openFeedback    = openFeedback;
-window.goBack          = goBack;
-window.submitFeedback  = submitFeedback;
+window.startGame          = startGame;
+window.togglePause        = togglePause;
+window.quitGame           = quitGame;
+window.toggleMute         = toggleMute;
+window.toggleBgm          = toggleBgm;
+window.switchBgmTrack     = switchBgmTrack;
+window.triggerRexUltimate = triggerRexUltimate;
+window.pokeStartTrex      = pokeStartTrex;
+window.pokeTrex           = pokeTrex;
+window.pokeGameOverTrex   = pokeGameOverTrex;
+window.loadTop3Widget     = loadTop3Widget;
+window.openLeaderboard    = openLeaderboard;
+window.setLeaderboardTab  = setLeaderboardTab;
+window.setGameMode        = setGameMode;
+window.openFeedback       = openFeedback;
+window.goBack             = goBack;
+window.submitFeedback     = submitFeedback;
 
 // ── Initialization on Load ────────────────────
-window.addEventListener('DOMContentLoaded', () => {
+function initAll() {
+  initTrexModels();
   setupMobileControls();
   initStarRating();
-});
+  setGameMode(getSafeStorage('tetris-mode', 'classic'), true);
+  startRandomTrexLoop();
+}
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', initAll);
+} else {
+  initAll();
+}
+
 
 </script>
 </body>
